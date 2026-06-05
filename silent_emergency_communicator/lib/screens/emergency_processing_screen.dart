@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'emergency_message_generator_screen.dart';
 
 class EmergencyProcessingScreen extends StatefulWidget {
   final String emergencyType;
@@ -118,14 +119,17 @@ class _EmergencyProcessingScreenState
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "${widget.emergencyType} Alert Ready",
-                        ),
-                      ),
-                    );
-                  },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) =>
+          EmergencyMessageGeneratorScreen(
+        emergencyType:
+            widget.emergencyType,
+      ),
+    ),
+  );
+},
                   child: const Text(
                     "Continue",
                   ),
