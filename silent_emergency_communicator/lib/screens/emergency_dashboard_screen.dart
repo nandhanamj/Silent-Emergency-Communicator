@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'emergency_processing_screen.dart';
 
 class EmergencyDashboardScreen extends StatelessWidget {
   const EmergencyDashboardScreen({super.key});
@@ -24,16 +25,17 @@ class EmergencyDashboardScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+  Navigator.pop(context);
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "$title Emergency Alert Sent",
-                    ),
-                  ),
-                );
-              },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => EmergencyProcessingScreen(
+        emergencyType: title,
+      ),
+    ),
+  );
+},
               child: const Text("Send"),
             ),
           ],
