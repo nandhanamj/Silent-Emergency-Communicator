@@ -19,6 +19,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   final List<String> relationships = [
     'Parent',
+    'Partner',
     'Sibling',
     'Friend',
     'Guardian',

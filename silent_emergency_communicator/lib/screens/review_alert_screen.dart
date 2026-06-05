@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
 import '../services/storage_service.dart';
+import '../services/location_service.dart';
+import '../services/contact_storage_service.dart';
+import '../services/sms_service.dart';
+import '../models/emergency_contact.dart';
 
 class ReviewAlertScreen extends StatefulWidget {
   final String emergencyType;
   final List<String> selectedTags;
   final String note;
   final String generatedMessage;
+  final List<EmergencyContact> selectedContacts;
+
+final bool policeSelected;
+final bool fireSelected;
+final bool ambulanceSelected;
 
   const ReviewAlertScreen({
-    super.key,
-    required this.emergencyType,
-    required this.selectedTags,
-    required this.note,
-    required this.generatedMessage,
-  });
+  super.key,
+  required this.emergencyType,
+  required this.selectedTags,
+  required this.note,
+  required this.generatedMessage,
+  required this.selectedContacts,
+  required this.policeSelected,
+  required this.fireSelected,
+  required this.ambulanceSelected,
+});
 
   @override
   State<ReviewAlertScreen> createState() =>
@@ -23,21 +36,76 @@ class _ReviewAlertScreenState
     extends State<ReviewAlertScreen> {
 
   Map<String, dynamic> profile = {};
+  List<EmergencyContact> contacts = [];
+  String latitude = '';
+String longitude = '';
+String mapsLink = '';
 
   @override
-  void initState() {
-    super.initState();
-    loadProfile();
+void initState() {
+  super.initState();
+  loadProfile();
+  loadLocation();
+}
+
+  Future loadProfile() async {
+
+  final data =
+      await StorageService.getUserProfile();
+
+  final savedContacts =
+      await ContactStorageService.getContacts();
+
+  setState(() {
+    profile = data;
+    contacts = savedContacts;
+  });
+}
+  Future<void> sendAlert() async {
+
+  final contacts =
+    widget.selectedContacts;
+
+  if (contacts.isEmpty) {
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'No emergency contacts added',
+        ),
+      ),
+    );
+
+    return;
   }
 
-  Future<void> loadProfile() async {
-    final data =
-        await StorageService.getUserProfile();
+  final phoneNumbers = contacts
+      .map((contact) => contact.phoneNumber)
+      .join(',');
 
-    setState(() {
-      profile = data;
-    });
-  }
+print("FINAL MESSAGE:");
+print(buildFinalMessage());
+ await SmsService.sendSms(
+  phoneNumbers,
+  buildFinalMessage(),
+);
+}
+  Future<void> loadLocation() async {
+  final position =
+      await LocationService.getCurrentLocation();
+
+  if (position == null) return;
+
+  setState(() {
+    latitude = position.latitude.toString();
+    longitude = position.longitude.toString();
+
+    mapsLink =
+        "https://maps.google.com/?q=$latitude,$longitude";
+  });
+}
   String buildFinalMessage() {
   String message =
       "${widget.emergencyType.toUpperCase()} EMERGENCY\n\n";
@@ -59,7 +127,10 @@ class _ReviewAlertScreenState
     message +=
         "\nAdditional Information:\n${widget.note}";
   }
-
+if (mapsLink.isNotEmpty) {
+  message +=
+      "\n\nLocation:\n$mapsLink";
+}
   message +=
       "\n\nPlease respond immediately.";
 
@@ -77,7 +148,7 @@ class _ReviewAlertScreenState
           children: [
 
             // USER INFORMATION CARD
-
+            
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -111,7 +182,40 @@ class _ReviewAlertScreenState
                 ),
               ),
             ),
+Card(
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+      children: [
 
+        const Text(
+          "Current Location",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        Text("Latitude: $latitude"),
+
+        Text("Longitude: $longitude"),
+
+        const SizedBox(height: 8),
+
+        Text(
+          mapsLink,
+          style: const TextStyle(
+            color: Colors.blue,
+          ),
+        ),
+      ],
+    ),
+  ),
+),
             const SizedBox(height: 12),
 
             // EMERGENCY TYPE
@@ -197,7 +301,120 @@ class _ReviewAlertScreenState
                 ),
               ),
             ),
+Card(
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+      children: [
 
+        const Text(
+          "Recipients",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        if (contacts.isNotEmpty) ...[
+
+          Text(
+            "Emergency Contacts (${contacts.length})",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          ...widget.selectedContacts.map(
+  (contact) => ListTile(
+    leading:
+        const Icon(Icons.person),
+    title: Text(contact.name),
+    subtitle:
+        Text(contact.phoneNumber),
+  ),
+),
+if (widget.policeSelected)
+  const ListTile(
+    leading:
+        Icon(Icons.local_police),
+    title: Text("Police"),
+  ),
+
+if (widget.fireSelected)
+  const ListTile(
+    leading: Icon(
+      Icons.local_fire_department,
+    ),
+    title:
+        Text("Fire Department"),
+  ),
+
+if (widget.ambulanceSelected)
+  const ListTile(
+    leading: Icon(
+      Icons.medical_services,
+    ),
+    title: Text("Ambulance"),
+  ),
+
+        ] else ...
+
+          [
+            const Text(
+              "No emergency contacts added",
+            ),
+          ],
+
+        const Divider(),
+
+        const ListTile(
+          leading: Icon(
+            Icons.local_fire_department,
+            color: Colors.orange,
+          ),
+          title: Text(
+            "Fire Department",
+          ),
+          subtitle: Text(
+            "Coming Soon",
+          ),
+        ),
+
+        const ListTile(
+          leading: Icon(
+            Icons.local_police,
+            color: Colors.blue,
+          ),
+          title: Text(
+            "Police Department",
+          ),
+          subtitle: Text(
+            "Coming Soon",
+          ),
+        ),
+
+        const ListTile(
+          leading: Icon(
+            Icons.medical_services,
+            color: Colors.red,
+          ),
+          title: Text(
+            "Ambulance Service",
+          ),
+          subtitle: Text(
+            "Coming Soon",
+          ),
+        ),
+      ],
+    ),
+  ),
+),
             const SizedBox(height: 24),
 
             SizedBox(
@@ -207,16 +424,7 @@ class _ReviewAlertScreenState
                 label: const Text(
                   "Confirm Alert",
                 ),
-                onPressed: () {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Alert Confirmed",
-                      ),
-                    ),
-                  );
-                },
+                onPressed: sendAlert,
               ),
             ),
           ],

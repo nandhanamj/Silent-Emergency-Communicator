@@ -3,6 +3,8 @@ import 'screens/splash_screen.dart';
 import 'screens/emergency_messages_screen.dart';
 import 'screens/feature_configuration_screen.dart';
 import 'screens/emergency_dashboard_screen.dart';
+import 'screens/emergency_contacts_screen.dart';
+import 'screens/registration_screen.dart';
 
 void main() {
   runApp(const SilentEmergencyApp());
@@ -20,7 +22,7 @@ class SilentEmergencyApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.red,
       ),
-      home: const EmergencyDashboardScreen(),
+     home:const EmergencyDashboardScreen(),
     );
   }
 }

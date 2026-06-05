@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'review_alert_screen.dart';
+import 'select_recipients_screen.dart';
 
 class EmergencyMessageGeneratorScreen extends StatefulWidget {
   final String emergencyType;
@@ -153,14 +154,14 @@ class _EmergencyMessageGeneratorScreenState
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  String finalMessage = generateMessage();
+                 String finalMessage = generateMessage();
 
 Navigator.push(
   context,
   MaterialPageRoute(
-    builder: (_) => ReviewAlertScreen(
+    builder: (_) => SelectRecipientsScreen(
       emergencyType: widget.emergencyType,
-      selectedTags: selectedTags,
+      selectedTags: List<String>.from(selectedTags),
       note: noteController.text,
       generatedMessage: finalMessage,
     ),
