@@ -21,15 +21,58 @@ class _EmergencyMessageGeneratorScreenState
 
   List<String> selectedTags = [];
 
-  final List<String> medicalTags = [
-    "Need Ambulance",
-    "Severe Injury",
-    "Unconscious Person",
-    "Breathing Problem",
-    "Heavy Bleeding",
-    "Heart Emergency",
-  ];
+  List<String> getTags() {
 
+  switch (widget.emergencyType) {
+
+    case "Medical":
+      return [
+        "Need Ambulance",
+        "Severe Injury",
+        "Unconscious Person",
+        "Breathing Problem",
+        "Heavy Bleeding",
+        "Heart Emergency",
+      ];
+
+    case "Police":
+      return [
+        "Theft",
+        "Assault",
+        "Harassment",
+        "Suspicious Activity",
+        "Need Police Assistance",
+      ];
+
+    case "Fire":
+      return [
+        "Fire Detected",
+        "Smoke Present",
+        "Building Fire",
+        "Person Trapped",
+        "Need Fire Service",
+      ];
+
+    case "Danger":
+      return [
+        "Being Followed",
+        "Unsafe Area",
+        "Threat Detected",
+        "Need Immediate Help",
+      ];
+
+    case "SOS":
+      return [
+        "Critical Situation",
+        "Need Help",
+        "Emergency Assistance",
+        "Contact Me Immediately",
+      ];
+
+    default:
+      return [];
+  }
+}
   void toggleTag(String tag) {
     setState(() {
       if (selectedTags.contains(tag)) {
@@ -69,8 +112,8 @@ class _EmergencyMessageGeneratorScreenState
         child: Column(
           children: [
 
-            const Text(
-              "Select Emergency Details",
+            Text(
+  "${widget.emergencyType} Emergency Details",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -81,7 +124,7 @@ class _EmergencyMessageGeneratorScreenState
 
             Wrap(
               spacing: 8,
-              children: medicalTags.map((tag) {
+              children: getTags().map((tag) {
                 return FilterChip(
                   label: Text(tag),
                   selected: selectedTags.contains(tag),
