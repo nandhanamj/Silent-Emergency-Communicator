@@ -47,32 +47,90 @@ Future<void> checkRegistration() async {
   }
 }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.red,
-      body: Center(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Container(
+      width: double.infinity,
+      height: double.infinity,
+
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFE53935),
+            Color(0xFFB71C1C),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+
+      child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.health_and_safety,
-              color: Colors.white,
-              size: 90,
+          mainAxisAlignment:
+              MainAxisAlignment.center,
+
+          children: [
+
+            Container(
+              padding:
+                  const EdgeInsets.all(24),
+
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+
+              child: const Icon(
+                Icons.health_and_safety,
+                color: Colors.red,
+                size: 80,
+              ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Silent Emergency\nCommunicator',
+
+            const SizedBox(height: 30),
+
+            const Text(
+              "Silent Emergency\nCommunicator",
               textAlign: TextAlign.center,
+
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 28,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+
+            const SizedBox(height: 12),
+
+            const Text(
+              "Your safety. One silent tap away.",
+              textAlign: TextAlign.center,
+
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 15,
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            const CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 3,
             ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
