@@ -1,11 +1,44 @@
 import 'package:flutter/material.dart';
+
+import '../services/storage_service.dart';
+
 import 'emergency_processing_screen.dart';
 import 'emergency_history_screen.dart';
 import 'language_screen.dart';
 import 'profile_screen.dart';
+import 'emergency_contacts_screen.dart';
+import 'emergency_messages_screen.dart';
+import 'feature_configuration_screen.dart';
 
-class EmergencyDashboardScreen extends StatelessWidget {
+class EmergencyDashboardScreen extends StatefulWidget {
   const EmergencyDashboardScreen({super.key});
+
+  @override
+  State<EmergencyDashboardScreen> createState() =>
+      _EmergencyDashboardScreenState();
+}
+
+class _EmergencyDashboardScreenState
+    extends State<EmergencyDashboardScreen> {
+  String userName = "User";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  Future<void> loadUser() async {
+    final profile =
+        await StorageService.getUserProfile();
+
+    setState(() {
+      userName =
+          profile["fullName"]?.isNotEmpty == true
+              ? profile["fullName"]!
+              : "User";
+    });
+  }
 
   void showEmergencyDialog(
     BuildContext context,
@@ -15,30 +48,32 @@ class EmergencyDashboardScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Confirm Alert"),
+          title: const Text(
+            "Confirm Emergency",
+          ),
           content: Text(
             "Send $title Emergency Alert?",
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () =>
+                  Navigator.pop(context),
               child: const Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () {
-  Navigator.pop(context);
+                Navigator.pop(context);
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => EmergencyProcessingScreen(
-        emergencyType: title,
-      ),
-    ),
-  );
-},
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        EmergencyProcessingScreen(
+                      emergencyType: title,
+                    ),
+                  ),
+                );
+              },
               child: const Text("Send"),
             ),
           ],
@@ -48,40 +83,69 @@ class EmergencyDashboardScreen extends StatelessWidget {
   }
 
   Widget emergencyCard(
-    BuildContext context,
     String title,
     IconData icon,
     Color color,
   ) {
     return GestureDetector(
       onTap: () {
-        showEmergencyDialog(context, title);
+        showEmergencyDialog(
+          context,
+          title,
+        );
       },
-      child: Card(
-        elevation: 4,
-        color: color,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 50,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius:
+              BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color:
+                  color.withOpacity(0.4),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
+        child: Column(
+          mainAxisAlignment:
+              MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 55,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight:
+                    FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget quickAction(
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Chip(
+        avatar: Icon(
+          icon,
+          size: 18,
+        ),
+        label: Text(title),
       ),
     );
   }
@@ -90,100 +154,320 @@ class EmergencyDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: const Text(
-    "Emergency Dashboard",
-  ),
-  actions: [
-
-    IconButton(
-      icon: const Icon(
-        Icons.history,
+        title: const Text(
+          "Emergency Dashboard",
+        ),
+        centerTitle: true,
+        elevation: 0,
       ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                const EmergencyHistoryScreen(),
-          ),
-        );
-      },
-    ),
 
-    IconButton(
-  icon: const Icon(Icons.person),
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>
-            const ProfileScreen(),
-      ),
-    );
-  },
-),
+      // ---------------- DRAWER ----------------
 
-    IconButton(
-      icon: const Icon(
-        Icons.language,
-      ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                const LanguageScreen(),
-          ),
-        );
-      },
-    ),
-
-  ],
-),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-
-            emergencyCard(
-              context,
-              "Medical",
-              Icons.medical_services,
-              Colors.red,
+            UserAccountsDrawerHeader(
+              decoration:
+                  const BoxDecoration(
+                color: Colors.red,
+              ),
+              accountName:
+                  Text(userName),
+              accountEmail:
+                  const Text(
+                "Silent Emergency Communicator",
+              ),
+              currentAccountPicture:
+                  const CircleAvatar(
+                child: Icon(
+                  Icons.person,
+                  size: 40,
+                ),
+              ),
             ),
 
-            emergencyCard(
-              context,
-              "Police",
-              Icons.local_police,
-              Colors.blue,
+            ListTile(
+              leading:
+                  const Icon(Icons.person),
+              title:
+                  const Text("Profile"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const ProfileScreen(),
+                  ),
+                );
+              },
             ),
 
-            emergencyCard(
-              context,
-              "Fire",
-              Icons.local_fire_department,
-              Colors.orange,
+            ListTile(
+              leading:
+                  const Icon(Icons.contacts),
+              title: const Text(
+                "Emergency Contacts",
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const EmergencyContactsScreen(),
+                  ),
+                );
+              },
             ),
 
-            emergencyCard(
-              context,
-              "Danger",
-              Icons.warning,
-              Colors.amber,
+            ListTile(
+              leading:
+                  const Icon(Icons.message),
+              title: const Text(
+                "Emergency Messages",
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const EmergencyMessagesScreen(),
+                  ),
+                );
+              },
             ),
 
-            emergencyCard(
-              context,
-              "SOS",
-              Icons.sos,
-              Colors.red.shade900,
+            ListTile(
+              leading:
+                  const Icon(Icons.history),
+              title: const Text(
+                "Emergency History",
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const EmergencyHistoryScreen(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              leading:
+                  const Icon(Icons.language),
+              title:
+                  const Text("Language"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const LanguageScreen(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              leading:
+                  const Icon(Icons.settings),
+              title: const Text(
+                "Feature Settings",
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const FeatureConfigurationScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
+      ),
+
+      // ---------------- BODY ----------------
+
+      body: Column(
+        children: [
+
+          // Welcome Card
+
+          Container(
+            margin:
+                const EdgeInsets.all(16),
+            padding:
+                const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient:
+                  const LinearGradient(
+                colors: [
+                  Colors.red,
+                  Colors.deepOrange,
+                ],
+              ),
+              borderRadius:
+                  BorderRadius.circular(
+                20,
+              ),
+            ),
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 30,
+                  backgroundColor:
+                      Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.red,
+                    size: 35,
+                  ),
+                ),
+
+                const SizedBox(width: 15),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment
+                            .start,
+                    children: [
+                      Text(
+                        "Welcome, $userName",
+                        style:
+                            const TextStyle(
+                          color:
+                              Colors.white,
+                          fontSize: 22,
+                          fontWeight:
+                              FontWeight
+                                  .bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text(
+                        "Choose an emergency type below.",
+                        style:
+                            TextStyle(
+                          color:
+                              Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Quick Actions
+
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
+            child: Wrap(
+              spacing: 8,
+              children: [
+
+                quickAction(
+                  Icons.contacts,
+                  "Contacts",
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            const EmergencyContactsScreen(),
+                      ),
+                    );
+                  },
+                ),
+
+                quickAction(
+                  Icons.message,
+                  "Messages",
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            const EmergencyMessagesScreen(),
+                      ),
+                    );
+                  },
+                ),
+
+                quickAction(
+                  Icons.history,
+                  "History",
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            const EmergencyHistoryScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.all(12),
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                children: [
+
+                  emergencyCard(
+                    "Medical",
+                    Icons.medical_services,
+                    Colors.red,
+                  ),
+
+                  emergencyCard(
+                    "Police",
+                    Icons.local_police,
+                    Colors.blue,
+                  ),
+
+                  emergencyCard(
+                    "Fire",
+                    Icons.local_fire_department,
+                    Colors.orange,
+                  ),
+
+                  emergencyCard(
+                    "Danger",
+                    Icons.warning,
+                    Colors.amber,
+                  ),
+
+                  emergencyCard(
+                    "SOS",
+                    Icons.sos,
+                    Colors.red.shade900,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

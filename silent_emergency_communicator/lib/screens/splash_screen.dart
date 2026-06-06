@@ -28,7 +28,7 @@ Future<void> checkRegistration() async {
 
   if (!mounted) return;
 
-  if (profile.isEmpty) {
+  if ((profile['fullName'] ?? '').isEmpty) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
