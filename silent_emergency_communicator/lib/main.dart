@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'screens/emergency_dashboard_screen.dart';
-
+import 'screens/splash_screen.dart';
 void main() {
   runApp(const SilentEmergencyApp());
 }
@@ -41,7 +39,7 @@ class SilentEmergencyApp extends StatelessWidget {
         );
       },
 
-      home: const EmergencyDashboardScreen(),
+      home: const SplashScreen(),
     );
   }
 }

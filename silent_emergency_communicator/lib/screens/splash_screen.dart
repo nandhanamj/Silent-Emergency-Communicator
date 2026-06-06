@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'registration_screen.dart';
+import '../services/storage_service.dart';
+import 'emergency_dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,22 +13,39 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-  @override
-  void initState() {
-    super.initState();
+ @override
+void initState() {
+  super.initState();
+  checkRegistration();
+}
+Future<void> checkRegistration() async {
+  await Future.delayed(
+    const Duration(seconds: 2),
+  );
 
-    Timer(
-      const Duration(seconds: 2),
-      () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const RegistrationScreen(),
-          ),
-        );
-      },
+  final profile =
+      await StorageService.getUserProfile();
+
+  if (!mounted) return;
+
+  if (profile.isEmpty) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const RegistrationScreen(),
+      ),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const EmergencyDashboardScreen(),
+      ),
     );
   }
+}
 
   @override
   Widget build(BuildContext context) {
