@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../services/storage_service.dart';
 import '../services/auto_sos_service.dart';
 import 'emergency_processing_screen.dart';
@@ -20,13 +19,14 @@ class EmergencyDashboardScreen extends StatefulWidget {
 
 class _EmergencyDashboardScreenState
     extends State<EmergencyDashboardScreen> {
+      bool isOnline = true;
   String userName = "User";
 
   @override
-  void initState() {
-    super.initState();
-    loadUser();
-  }
+void initState() {
+super.initState();
+loadUser();
+}
 
   Future<void> loadUser() async {
     final profile =
@@ -89,11 +89,24 @@ class _EmergencyDashboardScreenState
   ) {
     return GestureDetector(
       onTap: () {
-        showEmergencyDialog(
-          context,
-          title,
-        );
-      },
+
+if (!isOnline) {
+ScaffoldMessenger.of(context)
+.showSnackBar(
+const SnackBar(
+content: Text(
+"No internet connection available",
+),
+),
+);
+return;
+}
+
+showEmergencyDialog(
+context,
+title,
+);
+},
       child: Container(
         decoration: BoxDecoration(
           color: color,
@@ -292,270 +305,103 @@ class _EmergencyDashboardScreenState
 
       // ---------------- BODY ----------------
 
-      body: Column(
-        children: [
+  body: Column(
+children: [
 
-          // Welcome Card
-
-          Container(
-            margin:
-                const EdgeInsets.all(16),
-            padding:
-                const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient:
-                  const LinearGradient(
-                colors: [
-                  Colors.red,
-                  Colors.deepOrange,
-                ],
-              ),
-              borderRadius:
-                  BorderRadius.circular(
-                20,
-              ),
-            ),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundColor:
-                      Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.red,
-                    size: 35,
-                  ),
-                ),
-
-                const SizedBox(width: 15),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
-                    children: [
-                      Text(
-                        "Welcome, $userName",
-                        style:
-                            const TextStyle(
-                          color:
-                              Colors.white,
-                          fontSize: 22,
-                          fontWeight:
-                              FontWeight
-                                  .bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Text(
-                        "Choose an emergency type below.",
-                        style:
-                            TextStyle(
-                          color:
-                              Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Quick Actions
-
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(
-              horizontal: 12,
-            ),
-            child: Wrap(
-              spacing: 8,
-              children: [
-
-                quickAction(
-                  Icons.contacts,
-                  "Contacts",
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const EmergencyContactsScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                quickAction(
-                  Icons.message,
-                  "Messages",
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const EmergencyMessagesScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                quickAction(
-                  Icons.history,
-                  "History",
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const EmergencyHistoryScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 15),
-
-          Expanded(
-            child: Padding(
-              padding:
-                  const EdgeInsets.all(12),
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
-                children: [
-
-                  emergencyCard(
-                    "Medical",
-                    Icons.medical_services,
-                    Colors.red,
-                  ),
-
-                  emergencyCard(
-                    "Police",
-                    Icons.local_police,
-                    Colors.blue,
-                  ),
-
-                  emergencyCard(
-                    "Fire",
-                    Icons.local_fire_department,
-                    Colors.orange,
-                  ),
-
-                  emergencyCard(
-                    "Danger",
-                    Icons.warning,
-                    Colors.amber,
-                  ),
-
-                  GestureDetector(
-    onLongPress: () {
-  showDialog(
-    context: context,
-    builder: (_) {
-      return AlertDialog(
-        title: const Text("Emergency SOS"),
-        content: const Text(
-          "Send SOS alert to all contacts?",
+if (!isOnline)
+  Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(10),
+    color: Colors.red,
+    child: const Row(
+      mainAxisAlignment:
+          MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.wifi_off,
+          color: Colors.white,
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-
-              try {
-                await AutoSOSService.sendSOS();
-
-                if (!context.mounted) return;
-
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "SOS Alert Sent",
-                    ),
-                  ),
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  SnackBar(
-                    content: Text(e.toString()),
-                  ),
-                );
-              }
-            },
-            child: const Text("Send"),
-          ),
-        ],
-      );
-    },
-  );
-},
-
-  child: Card(
-    color: Colors.red.shade900,
-
-    child: const Center(
-      child: Column(
-        mainAxisAlignment:
-            MainAxisAlignment.center,
-        children: [
-
-          Icon(
-            Icons.sos,
+        SizedBox(width: 8),
+        Text(
+          "Offline Mode",
+          style: TextStyle(
             color: Colors.white,
-            size: 60,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+      ],
+    ),
+  ),
 
-          SizedBox(height: 10),
-
-          Text(
-            "SOS",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          SizedBox(height: 10),
-
-          Text(
-            "Long Press",
-            style: TextStyle(
-              color: Colors.white70,
-            ),
-          ),
-        ],
+Container(
+  width: double.infinity,
+  padding: const EdgeInsets.all(20),
+  margin: const EdgeInsets.all(12),
+  decoration: BoxDecoration(
+    color: Colors.red.shade100,
+    borderRadius:
+        BorderRadius.circular(20),
+  ),
+  child: Column(
+    crossAxisAlignment:
+        CrossAxisAlignment.start,
+    children: [
+      Text(
+        "Welcome, $userName",
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+        ),
       ),
+      const SizedBox(height: 5),
+      Text(
+        isOnline
+            ? "System Ready"
+            : "Working in Offline Mode",
+      ),
+    ],
+  ),
+),
+
+Expanded(
+  child: Padding(
+    padding: const EdgeInsets.all(12),
+    child: GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      children: [
+        emergencyCard(
+          "Medical",
+          Icons.medical_services,
+          Colors.red,
+        ),
+        emergencyCard(
+          "Police",
+          Icons.local_police,
+          Colors.blue,
+        ),
+        emergencyCard(
+          "Fire",
+          Icons.local_fire_department,
+          Colors.orange,
+        ),
+        emergencyCard(
+          "Danger",
+          Icons.warning,
+          Colors.amber,
+        ),
+        emergencyCard(
+          "SOS",
+          Icons.sos,
+          Colors.red.shade900,
+        ),
+      ],
     ),
   ),
 ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 }

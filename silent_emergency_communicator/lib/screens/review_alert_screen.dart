@@ -138,19 +138,55 @@ Future<void> sendAlert() async {
   );
 }
 
-  Future<void> loadLocation() async {
-  final position =
-      await LocationService.getCurrentLocation();
+Future<void> loadLocation() async {
+  try {
+    final position =
+        await LocationService.getCurrentLocation();
 
-  if (position == null) return;
+    if (position == null) {
+      setState(() {
+        latitude = "Unavailable";
+        longitude = "Unavailable";
+        mapsLink = "";
+      });
 
-  setState(() {
-    latitude = position.latitude.toString();
-    longitude = position.longitude.toString();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Location unavailable. Alert will be sent without GPS.",
+            ),
+          ),
+        );
+      }
 
-    mapsLink =
-        "https://maps.google.com/?q=$latitude,$longitude";
-  });
+      return;
+    }
+
+    setState(() {
+      latitude = position.latitude.toString();
+      longitude = position.longitude.toString();
+
+      mapsLink =
+          "https://maps.google.com/?q=$latitude,$longitude";
+    });
+  } catch (e) {
+    setState(() {
+      latitude = "Unavailable";
+      longitude = "Unavailable";
+      mapsLink = "";
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Failed to fetch location.",
+          ),
+        ),
+      );
+    }
+  }
 }
   String buildFinalMessage() {
   String message =
@@ -176,6 +212,9 @@ Future<void> sendAlert() async {
 if (mapsLink.isNotEmpty) {
   message +=
       "\n\nLocation:\n$mapsLink";
+} else {
+  message +=
+      "\n\nLocation: Unavailable";
 }
   message +=
       "\n\nPlease respond immediately.";
@@ -245,19 +284,33 @@ Card(
         ),
 
         const SizedBox(height: 10),
+       if (mapsLink.isNotEmpty) ...[
+  Text("Latitude: $latitude"),
+  Text("Longitude: $longitude"),
 
-        Text("Latitude: $latitude"),
+  const SizedBox(height: 8),
 
-        Text("Longitude: $longitude"),
+  Text(
+    mapsLink,
+    style: const TextStyle(
+      color: Colors.blue,
+    ),
+  ),
+] else ...[
+  const Text(
+    "GPS Location Unavailable",
+    style: TextStyle(
+      color: Colors.red,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
 
-        const SizedBox(height: 8),
+  const SizedBox(height: 5),
 
-        Text(
-          mapsLink,
-          style: const TextStyle(
-            color: Colors.blue,
-          ),
-        ),
+  const Text(
+    "Emergency alert will still be sent.",
+  ),
+],
       ],
     ),
   ),
