@@ -4,6 +4,9 @@ import '../services/location_service.dart';
 import '../services/contact_storage_service.dart';
 import '../services/sms_service.dart';
 import '../models/emergency_contact.dart';
+import '../models/emergency_history.dart';
+import '../services/history_storage_service.dart';
+import '../services/network_service.dart';
 
 class ReviewAlertScreen extends StatefulWidget {
   final String emergencyType;
@@ -61,37 +64,79 @@ void initState() {
     contacts = savedContacts;
   });
 }
-  Future<void> sendAlert() async {
+Future<void> sendAlert() async {
 
-  final contacts =
-    widget.selectedContacts;
+final contacts = widget.selectedContacts;
 
-  if (contacts.isEmpty) {
+if (contacts.isEmpty) {
+if (!mounted) return;
 
-    if (!mounted) return;
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text(
+      'No emergency contacts selected',
+    ),
+  ),
+);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'No emergency contacts added',
-        ),
-      ),
-    );
+return;
 
-    return;
-  }
+}
 
-  final phoneNumbers = contacts
-      .map((contact) => contact.phoneNumber)
-      .join(',');
+final phoneNumbers = contacts
+.map((contact) => contact.phoneNumber)
+.join(',');
 
-print("FINAL MESSAGE:");
-print(buildFinalMessage());
- await SmsService.sendSms(
+final finalMessage =
+buildFinalMessage();
+
+final hasInternet =
+await NetworkService.isInternetAvailable();
+
+if (hasInternet) {
+print("Internet Available");
+
+// Future Firebase Sync Here
+
+} else {
+print("No Internet - SMS Fallback");
+
+await SmsService.sendSms(
   phoneNumbers,
-  buildFinalMessage(),
+  finalMessage,
+);
+
+}
+
+final history = EmergencyHistory(
+emergencyType:
+widget.emergencyType,
+dateTime:
+    DateTime.now().toString(),
+
+message:
+    finalMessage,
+
+recipients: contacts
+    .map((e) => e.phoneNumber)
+    .toList(),
+);
+
+await HistoryStorageService.saveHistory(
+history,
+);
+
+if (!mounted) return;
+
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(
+content: Text(
+"Emergency Alert Saved",
+),
+),
 );
 }
+
   Future<void> loadLocation() async {
   final position =
       await LocationService.getCurrentLocation();

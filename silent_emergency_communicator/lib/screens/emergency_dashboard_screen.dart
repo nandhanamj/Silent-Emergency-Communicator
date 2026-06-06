@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'emergency_processing_screen.dart';
+import 'emergency_history_screen.dart';
 
 class EmergencyDashboardScreen extends StatelessWidget {
   const EmergencyDashboardScreen({super.key});
@@ -87,8 +88,22 @@ class EmergencyDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Emergency Dashboard"),
-      ),
+  title: const Text("Emergency Dashboard"),
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.history),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                const EmergencyHistoryScreen(),
+          ),
+        );
+      },
+    ),
+  ],
+),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: GridView.count(
