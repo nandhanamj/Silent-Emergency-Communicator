@@ -65,81 +65,77 @@ void initState() {
   });
 }
 Future<void> sendAlert() async {
+  final contacts = widget.selectedContacts;
 
-final contacts = widget.selectedContacts;
+  if (contacts.isEmpty) {
+    if (!mounted) return;
 
-if (contacts.isEmpty) {
-if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'No emergency contacts selected',
+        ),
+      ),
+    );
 
-ScaffoldMessenger.of(context).showSnackBar(
-  const SnackBar(
-    content: Text(
-      'No emergency contacts selected',
-    ),
-  ),
-);
+    return;
+  }
 
-return;
+  final phoneNumbers = contacts
+      .map((contact) => contact.phoneNumber)
+      .join(',');
 
-}
+  final finalMessage = buildFinalMessage();
 
-final phoneNumbers = contacts
-.map((contact) => contact.phoneNumber)
-.join(',');
+  // Vibration feedback
+  if (await Vibration.hasVibrator() ?? false) {
+    Vibration.vibrate(
+      duration: 500,
+    );
+  }
 
-final finalMessage =
-buildFinalMessage();
-if (await Vibration.hasVibrator()) {
-  Vibration.vibrate(
-    duration: 500,
-  );
-}
+  // Check internet (optional)
+  final hasInternet =
+      await NetworkService.isInternetAvailable();
 
-final hasInternet =
-await NetworkService.isInternetAvailable();
+  if (hasInternet) {
+    print("Internet Available");
 
-if (hasInternet) {
-print("Internet Available");
+    // Future Firebase Sync Here
 
-// Future Firebase Sync Here
+  } else {
+    print("No Internet");
+  }
 
-} else {
-print("No Internet - SMS Fallback");
-
-await SmsService.sendSms(
-  phoneNumbers,
-  finalMessage,
-);
-
-}
-
-final history = EmergencyHistory(
-emergencyType:
-widget.emergencyType,
-dateTime:
-    DateTime.now().toString(),
-
-message:
+  // ALWAYS launch SMS
+  await SmsService.sendSms(
+    phoneNumbers,
     finalMessage,
+  );
 
-recipients: contacts
-    .map((e) => e.phoneNumber)
-    .toList(),
-);
+  // Save to history
+  final history = EmergencyHistory(
+    emergencyType: widget.emergencyType,
+    dateTime: DateTime.now().toString(),
+    message: finalMessage,
+    recipients: contacts
+        .map((e) => e.phoneNumber)
+        .toList(),
+  );
 
-await HistoryStorageService.saveHistory(
-history,
-);
+  await HistoryStorageService.saveHistory(
+    history,
+  );
 
-if (!mounted) return;
+  if (!mounted) return;
 
-ScaffoldMessenger.of(context).showSnackBar(
-const SnackBar(
-content: Text(
-"Emergency Alert Saved",
-),
-),
-);
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text(
+        "Emergency Alert Saved",
+      ),
+    ),
+  );
 }
 
   Future<void> loadLocation() async {
