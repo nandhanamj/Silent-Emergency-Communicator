@@ -74,16 +74,33 @@ class _AddContactScreenState
   Widget build(BuildContext context) {
 
     return Scaffold(
+  backgroundColor: const Color(0xFFF8F9FC),
       appBar: AppBar(
-        title: const Text(
-          'Add Emergency Contact',
-        ),
-      ),
+  title: const Text(
+    "Add Emergency Contact",
+  ),
+  elevation: 0,
+  backgroundColor: Colors.white,
+  foregroundColor: Colors.black,
+),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
 
-        child: Form(
+        child: Container(
+  padding: const EdgeInsets.all(20),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(24),
+    boxShadow: const [
+      BoxShadow(
+        color: Colors.black12,
+        blurRadius: 10,
+        offset: Offset(0, 4),
+      ),
+    ],
+  ),
+  child: Form(
           key: _formKey,
 
           child: Column(
@@ -92,12 +109,16 @@ class _AddContactScreenState
               TextFormField(
                 controller: nameController,
 
-                decoration:
-                    const InputDecoration(
-                  labelText: 'Name',
-                  border:
-                      OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(
+  labelText: "Full Name",
+  prefixIcon: const Icon(
+    Icons.person_outline,
+  ),
+  border: OutlineInputBorder(
+    borderRadius:
+        BorderRadius.circular(16),
+  ),
+),
 
                 validator: (value) {
 
@@ -118,13 +139,16 @@ class _AddContactScreenState
                 keyboardType:
                     TextInputType.phone,
 
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Phone Number',
-                  border:
-                      OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(
+  labelText: "Phone Number",
+  prefixIcon: const Icon(
+    Icons.phone_outlined,
+  ),
+  border: OutlineInputBorder(
+    borderRadius:
+        BorderRadius.circular(16),
+  ),
+),
 
                 validator: (value) {
 
@@ -151,13 +175,16 @@ class _AddContactScreenState
                 value:
                     selectedRelationship,
 
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Relationship',
-                  border:
-                      OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(
+  labelText: "Relationship",
+  prefixIcon: const Icon(
+    Icons.people_outline,
+  ),
+  border: OutlineInputBorder(
+    borderRadius:
+        BorderRadius.circular(16),
+  ),
+),
 
                 items: relationships
                     .map((relationship) {
@@ -181,19 +208,39 @@ class _AddContactScreenState
               const SizedBox(height: 30),
 
               SizedBox(
-                width: double.infinity,
-
-                child: ElevatedButton(
+  width: double.infinity,
+  height: 55,
+  child: ElevatedButton.icon(
                   onPressed: saveContact,
 
-                  child: const Text(
-                    'Save Contact',
-                  ),
+style: ElevatedButton.styleFrom(
+  backgroundColor:
+      Colors.red.shade700,
+  shape: RoundedRectangleBorder(
+    borderRadius:
+        BorderRadius.circular(16),
+  ),
+),
+
+icon: const Icon(
+  Icons.save,
+  color: Colors.white,
+),
+
+label: const Text(
+  "Save Contact",
+  style: TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  ),
+),
                 ),
               ),
             ],
           ),
         ),
+      ),
       ),
     );
   }
