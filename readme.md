@@ -2,72 +2,89 @@
 
 ## Overview
 
-Silent Emergency Communicator is a Flutter-based mobile application designed to help users discreetly request assistance during emergency situations. The application allows users to create emergency profiles, manage trusted contacts, generate emergency alerts, share location information, and send emergency SMS messages quickly without drawing attention.
+**Silent Emergency Communicator** is a Flutter-based mobile application developed to provide a fast, discreet, and reliable method for requesting help during emergency situations.
 
-The project focuses on providing a silent and efficient emergency communication system for situations involving medical emergencies, crime, fire incidents, personal danger, or general SOS alerts.
+The application enables users to create an emergency profile, manage trusted contacts, automatically generate emergency alerts, retrieve live GPS location data, and send emergency SMS messages with minimal user interaction.
+
+The project was developed as a personal learning project to explore Flutter mobile development, device integration, local storage, GPS services, SMS communication, and emergency response workflows.
 
 ---
 
-## Features
+## Key Features
 
-### User Registration & Profile Management
+### Emergency Profile Management
 
-* Create emergency profile
-* Store personal information
+* User registration and onboarding
+* Personal profile management
 * Blood group information
-* Medical notes
-* Additional emergency information
-* Edit profile functionality
+* Medical notes and emergency information
+* Profile editing and updating
+* Persistent local storage
 
 ### Emergency Contact Management
 
 * Add emergency contacts
-* Edit emergency contacts
-* Delete emergency contacts
-* Store relationship information
-* Persistent local storage
+* Edit contact information
+* Delete contacts
+* Relationship tracking
+* Contact persistence using SharedPreferences
 
-### Emergency Alert System
+### Emergency Alert Types
+
+The application supports multiple emergency categories:
 
 * Medical Emergency
 * Police Emergency
 * Fire Emergency
 * Danger Alert
-* SOS Alert
+* Panic/SOS Alert
 
-### Smart Message Generation
+### Smart Emergency Message Generation
 
 * Emergency-specific tags
-* Custom emergency notes
+* Additional custom notes
 * Auto-generated emergency messages
 * User profile integration
+* Location-aware alert generation
 
 ### Location Services
 
-* GPS location retrieval
-* Google Maps location link generation
-* Automatic location inclusion in alerts
+* Real-time GPS location retrieval
+* Automatic coordinate detection
+* Google Maps link generation
+* Location inclusion in emergency alerts
 
-### SMS Alert Delivery
+### SMS-Based Emergency Communication
 
-* SMS-based emergency communication
+* Emergency SMS generation
 * Multiple recipient support
-* Silent alert generation
-* Emergency authority selection
+* One-tap alert sending
+* Silent communication workflow
 
-### Emergency History
+### Auto SOS System
+
+* Instant emergency alert preparation
+* Automatic emergency message generation
+* GPS-enabled SOS alerts
+* Contact-based emergency broadcasting
+
+### Emergency History Tracking
 
 * Alert history storage
-* Timestamp tracking
+* Timestamp recording
 * Emergency type tracking
 * Recipient tracking
+* Historical emergency review
 
 ### Additional Features
 
-* Silent emergency mode
-* Vibration feedback
-* Multilingual architecture support
-* Future-ready authority integration
+* Splash screen onboarding
+* Offline-ready local storage
+* Vibration feedback support
+* Emergency dashboard
+* Feature configuration screen
+* Language settings architecture
+* Custom application branding
 
 ---
 
@@ -78,95 +95,71 @@ The project focuses on providing a silent and efficient emergency communication 
 * Flutter
 * Dart
 
-### Storage
+### Local Storage
 
 * SharedPreferences
 
-### Device Services
+### Device Integration
 
 * Geolocator
-* SMS Launcher
+* URL Launcher
 * Vibration
+* Device Information APIs
 
 ### Architecture
 
 * Stateful Widget Architecture
 * Service Layer Architecture
-* Local Storage Architecture
+* Modular Screen-Based Navigation
+* Local Data Persistence Architecture
 
 ---
 
 ## Project Structure
 
+```text
 lib/
 
 ├── models/
-
-│ ├── user_profile.dart
-
-│ ├── emergency_contact.dart
-
-│ └── emergency_history.dart
-
+│   ├── emergency_contact.dart
+│   ├── emergency_history.dart
+│   └── user_profile.dart
 │
-
 ├── screens/
-
-│ ├── splash_screen.dart
-
-│ ├── registration_screen.dart
-
-│ ├── emergency_dashboard_screen.dart
-
-│ ├── emergency_processing_screen.dart
-
-│ ├── emergency_message_generator_screen.dart
-
-│ ├── select_recipients_screen.dart
-
-│ ├── review_alert_screen.dart
-
-│ ├── profile_screen.dart
-
-│ ├── edit_profile_screen.dart
-
-│ ├── emergency_contacts_screen.dart
-
-│ ├── add_contact_screen.dart
-
-│ ├── emergency_history_screen.dart
-
-│ ├── emergency_messages_screen.dart
-
-│ ├── feature_configuration_screen.dart
-
-│ └── language_screen.dart
-
+│   ├── splash_screen.dart
+│   ├── registration_screen.dart
+│   ├── emergency_dashboard_screen.dart
+│   ├── emergency_processing_screen.dart
+│   ├── emergency_message_generator_screen.dart
+│   ├── select_recipients_screen.dart
+│   ├── review_alert_screen.dart
+│   ├── profile_screen.dart
+│   ├── edit_profile_screen.dart
+│   ├── emergency_contacts_screen.dart
+│   ├── add_contact_screen.dart
+│   ├── emergency_history_screen.dart
+│   ├── emergency_messages_screen.dart
+│   ├── feature_configuration_screen.dart
+│   └── language_screen.dart
 │
-
 ├── services/
-
-│ ├── storage_service.dart
-
-│ ├── contact_storage_service.dart
-
-│ ├── history_storage_service.dart
-
-│ ├── location_service.dart
-
-│ ├── sms_service.dart
-
-│ ├── network_service.dart
-
-│ ├── auto_sos_service.dart
-
-│ ├── language_service.dart
-
-│ └── translation_service.dart
-
+│   ├── storage_service.dart
+│   ├── contact_storage_service.dart
+│   ├── history_storage_service.dart
+│   ├── location_service.dart
+│   ├── sms_service.dart
+│   ├── network_service.dart
+│   ├── auto_sos_service.dart
+│   ├── language_service.dart
+│   └── translation_service.dart
 │
-
+├── assets/
+│   ├── images/
+│       └──app_logo.png
+│
+│
 └── main.dart
+```
 
 ---
 
@@ -174,19 +167,33 @@ lib/
 
 ### Clone Repository
 
+```bash
 git clone https://github.com/your-username/silent-emergency-communicator.git
+```
 
 ### Navigate to Project
 
+```bash
 cd silent-emergency-communicator
+```
 
 ### Install Dependencies
 
+```bash
 flutter pub get
+```
 
 ### Run Application
 
+```bash
 flutter run
+```
+
+### Build Release APK
+
+```bash
+flutter build apk --release
+```
 
 ---
 
@@ -203,23 +210,59 @@ The application requires:
 
 ---
 
+## Screens Included
+
+* Splash Screen
+* Registration Screen
+* Emergency Dashboard
+* Emergency Processing Screen
+* Emergency Message Generator
+* Recipient Selection Screen
+* Alert Review Screen
+* Profile Screen
+* Emergency Contacts Screen
+* Emergency History Screen
+* Emergency Messages Screen
+* Feature Configuration Screen
+* Language Screen
+
+---
+
 ## Future Enhancements
 
 * Firebase Cloud Integration
-* Real-Time Alert Synchronization
-* Authority API Integration
+* Real-Time Emergency Synchronization
+* Emergency Authority Integration
 * Push Notifications
 * Voice Trigger Detection
-* Wearable Device Integration
+* Wearable Device Support
 * Offline Alert Queueing
+* AI-Based Emergency Detection
 * Multilingual Translation Engine
 * Hardware Shortcut Activation
 
 ---
 
+## Learning Outcomes
+
+This project was built to gain hands-on experience with:
+
+* Flutter Mobile Development
+* Dart Programming
+* Local Data Persistence
+* GPS & Location Services
+* SMS Integration
+* Mobile UI/UX Design
+* State Management
+* Service-Based Architecture
+* Android Application Deployment
+* Git & GitHub Version Control
+
+---
+
 ## Author
 
-Nandhana M J
+**Nandhana M J**
 
 B.Tech Computer Science and Engineering
 
@@ -227,4 +270,4 @@ B.Tech Computer Science and Engineering
 
 ## License
 
-This project is developed for educational and academic purposes.
+This project was developed for personal learning, educational exploration, and academic purposes.
