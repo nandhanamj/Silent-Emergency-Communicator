@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 import '../services/storage_service.dart';
 import '../services/location_service.dart';
 import '../services/contact_storage_service.dart';
@@ -7,7 +8,6 @@ import '../models/emergency_contact.dart';
 import '../models/emergency_history.dart';
 import '../services/history_storage_service.dart';
 import '../services/network_service.dart';
-
 class ReviewAlertScreen extends StatefulWidget {
   final String emergencyType;
   final List<String> selectedTags;
@@ -89,6 +89,11 @@ final phoneNumbers = contacts
 
 final finalMessage =
 buildFinalMessage();
+if (await Vibration.hasVibrator()) {
+  Vibration.vibrate(
+    duration: 500,
+  );
+}
 
 final hasInternet =
 await NetworkService.isInternetAvailable();
