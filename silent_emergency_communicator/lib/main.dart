@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
-import 'screens/emergency_messages_screen.dart';
-import 'screens/feature_configuration_screen.dart';
+
 import 'screens/emergency_dashboard_screen.dart';
-import 'screens/emergency_contacts_screen.dart';
-import 'screens/registration_screen.dart';
 
 void main() {
   runApp(const SilentEmergencyApp());
@@ -17,12 +13,35 @@ class SilentEmergencyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Silent Emergency Communicator',
+
       theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.red,
+        brightness: Brightness.light,
+        primarySwatch: Colors.red,
+
+        elevatedButtonTheme:
+            ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(
+              double.infinity,
+              60,
+            ),
+          ),
+        ),
       ),
-     home:const EmergencyDashboardScreen(),
+
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler:
+                const TextScaler.linear(
+              1.1,
+            ),
+          ),
+          child: child!,
+        );
+      },
+
+      home: const EmergencyDashboardScreen(),
     );
   }
 }

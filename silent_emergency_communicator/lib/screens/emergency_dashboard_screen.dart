@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'emergency_processing_screen.dart';
 import 'emergency_history_screen.dart';
+import 'language_screen.dart';
 
 class EmergencyDashboardScreen extends StatelessWidget {
   const EmergencyDashboardScreen({super.key});
@@ -88,10 +89,15 @@ class EmergencyDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: const Text("Emergency Dashboard"),
+  title: const Text(
+    "Emergency Dashboard",
+  ),
   actions: [
+
     IconButton(
-      icon: const Icon(Icons.history),
+      icon: const Icon(
+        Icons.history,
+      ),
       onPressed: () {
         Navigator.push(
           context,
@@ -102,6 +108,22 @@ class EmergencyDashboardScreen extends StatelessWidget {
         );
       },
     ),
+
+    IconButton(
+      icon: const Icon(
+        Icons.language,
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                const LanguageScreen(),
+          ),
+        );
+      },
+    ),
+
   ],
 ),
       body: Padding(
