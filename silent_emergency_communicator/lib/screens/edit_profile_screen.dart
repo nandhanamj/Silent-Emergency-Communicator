@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../services/storage_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -18,7 +17,8 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState
     extends State<EditProfileScreen> {
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey =
+      GlobalKey<FormState>();
 
   late TextEditingController nameController;
   late TextEditingController phoneController;
@@ -45,94 +45,268 @@ class _EditProfileScreenState
   }
 
   Future<void> saveProfile() async {
+    await StorageService.saveUserProfile(
+      fullName:
+          nameController.text.trim(),
+      phoneNumber:
+          phoneController.text.trim(),
+      bloodGroup:
+          bloodController.text.trim(),
+      medicalNotes:
+          widget.profile['medicalNotes'] ?? '',
+      additionalInfo:
+          widget.profile['additionalInfo'] ?? '',
+    );
 
-  await StorageService.saveUserProfile(
-    fullName: nameController.text.trim(),
+    if (!mounted) return;
 
-    phoneNumber:
-        phoneController.text.trim(),
+    Navigator.pop(context, true);
+  }
 
-    bloodGroup:
-        bloodController.text.trim(),
+  Widget buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          icon,
+          color: Colors.red.shade700,
+        ),
+        labelText: label,
 
-    medicalNotes:
-        widget.profile['medicalNotes'] ?? '',
+        filled: true,
+        fillColor: Colors.grey.shade50,
 
-    additionalInfo:
-        widget.profile['additionalInfo'] ?? '',
-  );
+        border: OutlineInputBorder(
+          borderRadius:
+              BorderRadius.circular(16),
+        ),
 
-  if (!mounted) return;
-
-  Navigator.pop(context, true);
-}
+        enabledBorder:
+            OutlineInputBorder(
+          borderRadius:
+              BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: Colors.grey.shade300,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          const Color(0xFFF8F9FC),
+
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+
         title: const Text(
           "Edit Profile",
+          style: TextStyle(
+            fontWeight:
+                FontWeight.bold,
+          ),
         ),
       ),
-      body: Padding(
+
+      body: SingleChildScrollView(
         padding:
             const EdgeInsets.all(16),
+
         child: Form(
           key: _formKey,
+
           child: Column(
             children: [
 
-              TextFormField(
-                controller:
-                    nameController,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      "Full Name",
-                ),
-              ),
+              // PROFILE HEADER
 
-              const SizedBox(
-                height: 16,
-              ),
-
-              TextFormField(
-                controller:
-                    phoneController,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      "Phone Number",
-                ),
-              ),
-
-              const SizedBox(
-                height: 16,
-              ),
-
-              TextFormField(
-                controller:
-                    bloodController,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      "Blood Group",
-                ),
-              ),
-
-              const SizedBox(
-                height: 30,
-              ),
-
-              SizedBox(
+              Container(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed:
-                      saveProfile,
-                  child: const Text(
-                    "Save Changes",
+                padding:
+                    const EdgeInsets.all(
+                  24,
+                ),
+
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(
+                    24,
                   ),
+
+                  boxShadow: const [
+                    BoxShadow(
+                      color:
+                          Colors.black12,
+                      blurRadius: 8,
+                      offset:
+                          Offset(0, 4),
+                    ),
+                  ],
+                ),
+
+                child: Column(
+                  children: [
+
+                    CircleAvatar(
+                      radius: 45,
+                      backgroundColor:
+                          Colors.red.shade50,
+
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color:
+                            Colors.red.shade700,
+                      ),
+                    ),
+
+                    const SizedBox(
+                        height: 12),
+
+                    const Text(
+                      "Edit Your Profile",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(
+                        height: 6),
+
+                    Text(
+                      "Update your emergency information",
+                      style: TextStyle(
+                        color: Colors
+                            .grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // FORM CARD
+
+              Container(
+                padding:
+                    const EdgeInsets.all(
+                  20,
+                ),
+
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(
+                    24,
+                  ),
+
+                  boxShadow: const [
+                    BoxShadow(
+                      color:
+                          Colors.black12,
+                      blurRadius: 8,
+                      offset:
+                          Offset(0, 4),
+                    ),
+                  ],
+                ),
+
+                child: Column(
+                  children: [
+
+                    buildTextField(
+                      controller:
+                          nameController,
+                      label:
+                          "Full Name",
+                      icon:
+                          Icons.person,
+                    ),
+
+                    const SizedBox(
+                        height: 18),
+
+                    buildTextField(
+                      controller:
+                          phoneController,
+                      label:
+                          "Phone Number",
+                      icon:
+                          Icons.phone,
+                    ),
+
+                    const SizedBox(
+                        height: 18),
+
+                    buildTextField(
+                      controller:
+                          bloodController,
+                      label:
+                          "Blood Group",
+                      icon: Icons.bloodtype,
+                    ),
+
+                    const SizedBox(
+                        height: 30),
+
+                    SizedBox(
+                      width:
+                          double.infinity,
+                      height: 55,
+
+                      child:
+                          ElevatedButton.icon(
+                        icon: const Icon(
+                          Icons.save,
+                        ),
+
+                        onPressed:
+                            saveProfile,
+
+                        style:
+                            ElevatedButton
+                                .styleFrom(
+                          backgroundColor:
+                              Colors
+                                  .red
+                                  .shade700,
+
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(
+                              16,
+                            ),
+                          ),
+                        ),
+
+                        label:
+                            const Text(
+                          "Save Changes",
+                          style:
+                              TextStyle(
+                            fontSize:
+                                18,
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

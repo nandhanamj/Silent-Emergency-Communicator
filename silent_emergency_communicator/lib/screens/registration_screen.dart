@@ -81,160 +81,317 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFFF8F9FC),
 
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-        title: const Text(
-          'Registration',
+    appBar: AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      title: const Text(
+        "Registration",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
         ),
       ),
+    ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
 
-        child: Form(
-          key: _formKey,
+      child: Form(
+        key: _formKey,
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Column(
+          children: [
 
-            children: [
+            // HEADER CARD
 
-              const Icon(
-                Icons.health_and_safety,
-                color: Colors.red,
-                size: 80,
-              ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
 
-              const SizedBox(height: 15),
-
-              const Text(
-                'Silent Emergency Communicator',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              const Text(
-                'Create Your Emergency Profile',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              TextFormField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Full Name *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              TextFormField(
-                controller: phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter phone number';
-                  }
-
-                  if (!isValidIndianPhone(value)) {
-                    return 'Enter a valid Indian mobile number';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              DropdownButtonFormField<String>(
-                value: selectedBloodGroup,
-                decoration: const InputDecoration(
-                  labelText: 'Blood Group *',
-                  border: OutlineInputBorder(),
-                ),
-                items: bloodGroups.map((group) {
-                  return DropdownMenuItem(
-                    value: group,
-                    child: Text(group),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedBloodGroup = value;
-                  });
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              TextFormField(
-                controller: medicalController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Medical Notes (Optional)',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              TextFormField(
-                controller: infoController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Additional Information (Optional)',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              SizedBox(
-                height: 55,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
                   ),
-                  onPressed: validateAndContinue,
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(fontSize: 18),
+                ],
+              ),
+
+              child: Column(
+                children: [
+
+                  CircleAvatar(
+                    radius: 45,
+                    backgroundColor:
+                        Colors.red.shade50,
+
+                    child: Icon(
+                      Icons.health_and_safety,
+                      size: 50,
+                      color: Colors.red.shade700,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  const Text(
+                    "Emergency Profile",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Text(
+                    "Create your emergency information profile for quick assistance.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color:
+                          Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // FORM CARD
+
+            Container(
+              padding: const EdgeInsets.all(20),
+
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    BorderRadius.circular(24),
+
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+
+              child: Column(
+                children: [
+
+                  TextFormField(
+                    controller: nameController,
+
+                    decoration:
+                        InputDecoration(
+                      labelText:
+                          "Full Name",
+                      prefixIcon:
+                          const Icon(
+                        Icons.person,
+                      ),
+                      border:
+                          OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(
+                                15),
+                      ),
+                    ),
+
+                    validator: (value) {
+                      if (value == null ||
+                          value.trim()
+                              .isEmpty) {
+                        return "Please enter your name";
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  TextFormField(
+                    controller:
+                        phoneController,
+                    keyboardType:
+                        TextInputType.phone,
+
+                    decoration:
+                        InputDecoration(
+                      labelText:
+                          "Phone Number",
+                      prefixIcon:
+                          const Icon(
+                        Icons.phone,
+                      ),
+                      border:
+                          OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(
+                                15),
+                      ),
+                    ),
+
+                    validator: (value) {
+                      if (value == null ||
+                          value.isEmpty) {
+                        return "Please enter phone number";
+                      }
+
+                      if (!isValidIndianPhone(
+                          value)) {
+                        return "Enter a valid Indian mobile number";
+                      }
+
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  DropdownButtonFormField<
+                      String>(
+                    value:
+                        selectedBloodGroup,
+
+                    decoration:
+                        InputDecoration(
+                      labelText:
+                          "Blood Group",
+                      prefixIcon:
+                          const Icon(
+                        Icons.bloodtype,
+                      ),
+                      border:
+                          OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(
+                                15),
+                      ),
+                    ),
+
+                    items: bloodGroups
+                        .map((group) {
+                      return DropdownMenuItem(
+                        value: group,
+                        child:
+                            Text(group),
+                      );
+                    }).toList(),
+
+                    onChanged: (value) {
+                      setState(() {
+                        selectedBloodGroup =
+                            value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  TextFormField(
+                    controller:
+                        medicalController,
+                    maxLines: 3,
+
+                    decoration:
+                        InputDecoration(
+                      labelText:
+                          "Medical Notes",
+                      prefixIcon:
+                          const Icon(
+                        Icons.medical_services,
+                      ),
+                      border:
+                          OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(
+                                15),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  TextFormField(
+                    controller:
+                        infoController,
+                    maxLines: 3,
+
+                    decoration:
+                        InputDecoration(
+                      labelText:
+                          "Additional Information",
+                      prefixIcon:
+                          const Icon(
+                        Icons.info,
+                      ),
+                      border:
+                          OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(
+                                15),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            SizedBox(
+              width: double.infinity,
+              height: 55,
+
+              child: ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.save,
+                ),
+
+                style:
+                    ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.red.shade700,
+
+                  foregroundColor:
+                      Colors.white,
+
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(
+                            16),
+                  ),
+                ),
+
+                onPressed:
+                    validateAndContinue,
+
+                label: const Text(
+                  "Save Profile",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight:
+                        FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
