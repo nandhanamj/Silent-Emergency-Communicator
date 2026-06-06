@@ -363,6 +363,59 @@ Container(
   ),
 ),
 
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 12),
+  child: SizedBox(
+    width: double.infinity,
+    height: 60,
+    child: ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red.shade900,
+      ),
+      icon: const Icon(
+        Icons.sos,
+        color: Colors.white,
+        size: 30,
+      ),
+      label: const Text(
+        "AUTO SOS",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      onPressed: () async {
+        try {
+          await AutoSOSService.sendSOS();
+
+          if (!mounted) return;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "SOS Alert Prepared Successfully",
+              ),
+            ),
+          );
+        } catch (e) {
+          if (!mounted) return;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                e.toString(),
+              ),
+            ),
+          );
+        }
+      },
+    ),
+  ),
+),
+
+const SizedBox(height: 12),
+
 Expanded(
   child: Padding(
     padding: const EdgeInsets.all(12),
