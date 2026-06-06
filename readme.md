@@ -2,34 +2,97 @@
 
 ## Overview
 
-Silent Emergency Communicator is a Flutter-based emergency communication application designed to help users quickly send emergency alerts to trusted contacts during critical situations.
+Silent Emergency Communicator is a Flutter-based mobile application designed to help users discreetly request assistance during emergency situations. The application allows users to create emergency profiles, manage trusted contacts, generate emergency alerts, share location information, and send emergency SMS messages quickly without drawing attention.
 
-The application allows users to create emergency profiles, manage emergency contacts, share GPS location, generate emergency messages, trigger Auto SOS alerts, and maintain emergency history records.
+The project focuses on providing a silent and efficient emergency communication system for situations involving medical emergencies, crime, fire incidents, personal danger, or general SOS alerts.
 
 ---
 
 ## Features
 
-* User Profile Management
-* Emergency Contact Management
-* Emergency Message Templates
-* GPS Location Integration
-* SMS-Based Emergency Alerts
-* Auto SOS Functionality
-* Emergency History Tracking
-* Offline Support
-* Local Storage System
+### User Registration & Profile Management
+
+* Create emergency profile
+* Store personal information
+* Blood group information
+* Medical notes
+* Additional emergency information
+* Edit profile functionality
+
+### Emergency Contact Management
+
+* Add emergency contacts
+* Edit emergency contacts
+* Delete emergency contacts
+* Store relationship information
+* Persistent local storage
+
+### Emergency Alert System
+
+* Medical Emergency
+* Police Emergency
+* Fire Emergency
+* Danger Alert
+* SOS Alert
+
+### Smart Message Generation
+
+* Emergency-specific tags
+* Custom emergency notes
+* Auto-generated emergency messages
+* User profile integration
+
+### Location Services
+
+* GPS location retrieval
+* Google Maps location link generation
+* Automatic location inclusion in alerts
+
+### SMS Alert Delivery
+
+* SMS-based emergency communication
+* Multiple recipient support
+* Silent alert generation
+* Emergency authority selection
+
+### Emergency History
+
+* Alert history storage
+* Timestamp tracking
+* Emergency type tracking
+* Recipient tracking
+
+### Additional Features
+
+* Silent emergency mode
+* Vibration feedback
+* Multilingual architecture support
+* Future-ready authority integration
 
 ---
 
-## Technology Stack
+## Technologies Used
+
+### Frontend
 
 * Flutter
 * Dart
+
+### Storage
+
 * SharedPreferences
+
+### Device Services
+
 * Geolocator
-* URL Launcher
-* Connectivity Plus
+* SMS Launcher
+* Vibration
+
+### Architecture
+
+* Stateful Widget Architecture
+* Service Layer Architecture
+* Local Storage Architecture
 
 ---
 
@@ -37,49 +100,120 @@ The application allows users to create emergency profiles, manage emergency cont
 
 lib/
 
-* models/
-* screens/
-* services/
-* widgets/
+├── models/
+
+│ ├── user_profile.dart
+
+│ ├── emergency_contact.dart
+
+│ └── emergency_history.dart
+
+│
+
+├── screens/
+
+│ ├── splash_screen.dart
+
+│ ├── registration_screen.dart
+
+│ ├── emergency_dashboard_screen.dart
+
+│ ├── emergency_processing_screen.dart
+
+│ ├── emergency_message_generator_screen.dart
+
+│ ├── select_recipients_screen.dart
+
+│ ├── review_alert_screen.dart
+
+│ ├── profile_screen.dart
+
+│ ├── edit_profile_screen.dart
+
+│ ├── emergency_contacts_screen.dart
+
+│ ├── add_contact_screen.dart
+
+│ ├── emergency_history_screen.dart
+
+│ ├── emergency_messages_screen.dart
+
+│ ├── feature_configuration_screen.dart
+
+│ └── language_screen.dart
+
+│
+
+├── services/
+
+│ ├── storage_service.dart
+
+│ ├── contact_storage_service.dart
+
+│ ├── history_storage_service.dart
+
+│ ├── location_service.dart
+
+│ ├── sms_service.dart
+
+│ ├── network_service.dart
+
+│ ├── auto_sos_service.dart
+
+│ ├── language_service.dart
+
+│ └── translation_service.dart
+
+│
+
+└── main.dart
 
 ---
 
 ## Installation
 
-1. Clone the repository
+### Clone Repository
 
-git clone <repository-url>
+git clone https://github.com/your-username/silent-emergency-communicator.git
 
-2. Open the project
+### Navigate to Project
 
-cd silent_emergency_communicator
+cd silent-emergency-communicator
 
-3. Install dependencies
+### Install Dependencies
 
 flutter pub get
 
-4. Run the application
+### Run Application
 
 flutter run
 
 ---
 
-## Current Version
+## Required Permissions
 
-Version: 1.0
+### Android
 
-Status: Development Complete
+The application requires:
+
+* Internet Permission
+* Location Permission
+* SMS Permission
+* Vibration Permission
 
 ---
 
 ## Future Enhancements
 
 * Firebase Cloud Integration
-* Emergency Service Integration
+* Real-Time Alert Synchronization
+* Authority API Integration
 * Push Notifications
-* Cloud Backup
-* Voice Activated SOS
-* Smart Wearable Support
+* Voice Trigger Detection
+* Wearable Device Integration
+* Offline Alert Queueing
+* Multilingual Translation Engine
+* Hardware Shortcut Activation
 
 ---
 
@@ -87,4 +221,10 @@ Status: Development Complete
 
 Nandhana M J
 
-Silent Emergency Communicator Project
+B.Tech Computer Science and Engineering
+
+---
+
+## License
+
+This project is developed for educational and academic purposes.
