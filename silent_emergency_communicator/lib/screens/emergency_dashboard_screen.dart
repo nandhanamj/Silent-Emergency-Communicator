@@ -82,69 +82,79 @@ loadUser();
     );
   }
 
-  Widget emergencyCard(
-    String title,
-    IconData icon,
-    Color color,
-  ) {
-    return GestureDetector(
-      onTap: () {
+Widget emergencyCard(
+  String title,
+  IconData icon,
+  Color color,
+) {
+  return GestureDetector(
+    onTap: () {
+      if (!isOnline) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "No internet connection available",
+            ),
+          ),
+        );
+        return;
+      }
 
-if (!isOnline) {
-ScaffoldMessenger.of(context)
-.showSnackBar(
-const SnackBar(
-content: Text(
-"No internet connection available",
-),
-),
-);
-return;
-}
-
-showEmergencyDialog(
-context,
-title,
-);
-},
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius:
-              BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  color.withOpacity(0.4),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
+      showEmergencyDialog(
+        context,
+        title,
+      );
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: color.withOpacity(0.35),
+          width: 1.5,
         ),
-        child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 65,
-              color: Colors.white,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight:
-                    FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-    );
-  }
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 48,
+            color: color,
+          ),
+
+          const SizedBox(height: 10),
+
+          Text(
+            title,
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 4),
+
+          const Text(
+            "Emergency",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget quickAction(
     IconData icon,
@@ -166,6 +176,7 @@ title,
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+  backgroundColor: const Color(0xFFF8F9FC),
       appBar: AppBar(
   elevation: 0,
   backgroundColor: Colors.white,
@@ -337,7 +348,6 @@ if (!isOnline)
       ],
     ),
   ),
-
 Container(
   width: double.infinity,
   margin: const EdgeInsets.all(16),
@@ -345,27 +355,23 @@ Container(
   decoration: BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.circular(24),
-    border: Border.all(
-      color: Colors.red,
-      width: 2,
-    ),
-    boxShadow: [
+    boxShadow: const [
       BoxShadow(
-        color: Colors.red.withOpacity(0.08),
-        blurRadius: 10,
-        offset: const Offset(0, 4),
+        color: Colors.black12,
+        blurRadius: 12,
+        offset: Offset(0, 4),
       ),
     ],
   ),
   child: Row(
     children: [
       CircleAvatar(
-        radius: 30,
+        radius: 28,
         backgroundColor: Colors.red.shade50,
         child: Icon(
-          Icons.person,
+          Icons.health_and_safety,
           color: Colors.red.shade700,
-          size: 35,
+          size: 34,
         ),
       ),
 
@@ -373,12 +379,12 @@ Container(
 
       Expanded(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             Text(
               "Welcome, $userName",
               style: const TextStyle(
-                color: Colors.black87,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
@@ -394,8 +400,7 @@ Container(
                 color: isOnline
                     ? Colors.green
                     : Colors.red,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -404,7 +409,6 @@ Container(
     ],
   ),
 ),
-
 Expanded(
   child: Column(
     children: [
@@ -439,7 +443,7 @@ Expanded(
                 Colors.amber,
               ),
               emergencyCard(
-                "SOS",
+                "Panic",
                 Icons.sos,
                 Colors.red.shade900,
               ),
@@ -460,25 +464,29 @@ Expanded(
           height: 65,
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFB71C1C),
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(18),
-              ),
-            ),
-            icon: const Icon(
-              Icons.sos,
-              color: Colors.white,
-            ),
-            label: const Text(
-              "AUTO SOS",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+  backgroundColor: Colors.red.shade800,
+
+  elevation: 8,
+
+  shadowColor: Colors.redAccent,
+
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20),
+  ),
+),
+icon: const Icon(
+  Icons.sos,
+  color: Colors.white,
+  size: 28,
+),
+label: const Text(
+  "Auto SOS",
+  style: TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  ),
+),
             onPressed: () async {
               try {
                 await AutoSOSService.sendSOS();
