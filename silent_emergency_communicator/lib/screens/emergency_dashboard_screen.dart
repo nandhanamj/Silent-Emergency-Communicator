@@ -127,7 +127,7 @@ title,
           children: [
             Icon(
               icon,
-              size: 55,
+              size: 65,
               color: Colors.white,
             ),
             const SizedBox(height: 12),
@@ -135,7 +135,7 @@ title,
               title,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight:
                     FontWeight.bold,
               ),
@@ -167,12 +167,17 @@ title,
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Emergency Dashboard",
-        ),
-        centerTitle: true,
-        elevation: 0,
-      ),
+  elevation: 0,
+  backgroundColor: Colors.white,
+  foregroundColor: Colors.black87,
+  centerTitle: true,
+  title: const Text(
+    "Silent Emergency",
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
 
       // ---------------- DRAWER ----------------
 
@@ -335,122 +340,176 @@ if (!isOnline)
 
 Container(
   width: double.infinity,
+  margin: const EdgeInsets.all(16),
   padding: const EdgeInsets.all(20),
-  margin: const EdgeInsets.all(12),
   decoration: BoxDecoration(
-    color: Colors.red.shade100,
-    borderRadius:
-        BorderRadius.circular(20),
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(24),
+    border: Border.all(
+      color: Colors.red,
+      width: 2,
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.red.withOpacity(0.08),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      ),
+    ],
   ),
-  child: Column(
-    crossAxisAlignment:
-        CrossAxisAlignment.start,
+  child: Row(
     children: [
-      Text(
-        "Welcome, $userName",
-        style: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
+      CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.red.shade50,
+        child: Icon(
+          Icons.person,
+          color: Colors.red.shade700,
+          size: 35,
         ),
       ),
-      const SizedBox(height: 5),
-      Text(
-        isOnline
-            ? "System Ready"
-            : "Working in Offline Mode",
+
+      const SizedBox(width: 16),
+
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Welcome, $userName",
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 4),
+
+            Text(
+              isOnline
+                  ? "Emergency System Ready"
+                  : "Offline Mode Active",
+              style: TextStyle(
+                color: isOnline
+                    ? Colors.green
+                    : Colors.red,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     ],
   ),
 ),
 
-Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 12),
-  child: SizedBox(
-    width: double.infinity,
-    height: 60,
-    child: ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red.shade900,
-      ),
-      icon: const Icon(
-        Icons.sos,
-        color: Colors.white,
-        size: 30,
-      ),
-      label: const Text(
-        "AUTO SOS",
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-      onPressed: () async {
-        try {
-          await AutoSOSService.sendSOS();
-
-          if (!mounted) return;
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "SOS Alert Prepared Successfully",
-              ),
-            ),
-          );
-        } catch (e) {
-          if (!mounted) return;
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                e.toString(),
-              ),
-            ),
-          );
-        }
-      },
-    ),
-  ),
-),
-
-const SizedBox(height: 12),
-
 Expanded(
-  child: Padding(
-    padding: const EdgeInsets.all(12),
-    child: GridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      children: [
-        emergencyCard(
-          "Medical",
-          Icons.medical_services,
-          Colors.red,
+  child: Column(
+    children: [
+
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: GridView.count(
+            crossAxisCount: 2,
+            childAspectRatio: 1.05,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            children: [
+              emergencyCard(
+                "Medical",
+                Icons.medical_services,
+                Colors.red,
+              ),
+              emergencyCard(
+                "Police",
+                Icons.local_police,
+                Colors.blue,
+              ),
+              emergencyCard(
+                "Fire",
+                Icons.local_fire_department,
+                Colors.orange,
+              ),
+              emergencyCard(
+                "Danger",
+                Icons.warning,
+                Colors.amber,
+              ),
+              emergencyCard(
+                "SOS",
+                Icons.sos,
+                Colors.red.shade900,
+              ),
+            ],
+          ),
         ),
-        emergencyCard(
-          "Police",
-          Icons.local_police,
-          Colors.blue,
+      ),
+
+      Padding(
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          0,
+          16,
+          16,
         ),
-        emergencyCard(
-          "Fire",
-          Icons.local_fire_department,
-          Colors.orange,
+        child: SizedBox(
+          width: double.infinity,
+          height: 65,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFB71C1C),
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(18),
+              ),
+            ),
+            icon: const Icon(
+              Icons.sos,
+              color: Colors.white,
+            ),
+            label: const Text(
+              "AUTO SOS",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () async {
+              try {
+                await AutoSOSService.sendSOS();
+
+                if (!mounted) return;
+
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "SOS Alert Prepared Successfully",
+                    ),
+                  ),
+                );
+              } catch (e) {
+                if (!mounted) return;
+
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      e.toString(),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
         ),
-        emergencyCard(
-          "Danger",
-          Icons.warning,
-          Colors.amber,
-        ),
-        emergencyCard(
-          "SOS",
-          Icons.sos,
-          Colors.red.shade900,
-        ),
-      ],
-    ),
+      ),
+    ],
   ),
 ),
       ],
