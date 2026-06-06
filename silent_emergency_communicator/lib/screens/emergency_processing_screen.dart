@@ -30,30 +30,34 @@ class _EmergencyProcessingScreenState
 
   Future<void> startProcessing() async {
 
-    await Future.delayed(const Duration(seconds: 1));
+  await Future.delayed(const Duration(seconds: 1));
 
-    setState(() {
-      identified = true;
-    });
+  if (!mounted) return;
+  setState(() {
+    identified = true;
+  });
 
-    await Future.delayed(const Duration(seconds: 1));
+  await Future.delayed(const Duration(seconds: 1));
 
-    setState(() {
-      profileLoaded = true;
-    });
+  if (!mounted) return;
+  setState(() {
+    profileLoaded = true;
+  });
 
-    await Future.delayed(const Duration(seconds: 1));
+  await Future.delayed(const Duration(seconds: 1));
 
-    setState(() {
-      messagePrepared = true;
-    });
+  if (!mounted) return;
+  setState(() {
+    messagePrepared = true;
+  });
 
-    await Future.delayed(const Duration(seconds: 1));
+  await Future.delayed(const Duration(seconds: 1));
 
-    setState(() {
-      readyToSend = true;
-    });
-  }
+  if (!mounted) return;
+  setState(() {
+    readyToSend = true;
+  });
+}
 
   Widget buildStep(
     String title,
