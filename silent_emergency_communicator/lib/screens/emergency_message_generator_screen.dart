@@ -103,79 +103,296 @@ class _EmergencyMessageGeneratorScreenState
     return message;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Generate Message"),
+ @override
+Widget build(BuildContext context) {
+
+  Color emergencyColor;
+
+  switch (widget.emergencyType) {
+    case "Medical":
+      emergencyColor = Colors.red;
+      break;
+
+    case "Police":
+      emergencyColor = Colors.blue;
+      break;
+
+    case "Fire":
+      emergencyColor = Colors.orange;
+      break;
+
+    case "Danger":
+      emergencyColor = Colors.amber.shade700;
+      break;
+
+    default:
+      emergencyColor = Colors.red.shade900;
+  }
+
+  return Scaffold(
+    backgroundColor: const Color(0xFFF8F9FC),
+
+    appBar: AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      title: const Text(
+        "Generate Message",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-
-            Text(
-  "${widget.emergencyType} Emergency Details",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Wrap(
-              spacing: 8,
-              children: getTags().map((tag) {
-                return FilterChip(
-                  label: Text(tag),
-                  selected: selectedTags.contains(tag),
-                  onSelected: (_) {
-                    toggleTag(tag);
-                  },
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: noteController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: "Additional Information",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                 String finalMessage = generateMessage();
-
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => SelectRecipientsScreen(
-      emergencyType: widget.emergencyType,
-      selectedTags: List<String>.from(selectedTags),
-      note: noteController.text,
-      generatedMessage: finalMessage,
     ),
-  ),
-);
-                },
-                child: const Text(
-                  "Generate Message",
+
+    body: Padding(
+      padding: const EdgeInsets.all(16),
+
+      child: Column(
+        children: [
+
+          // HEADER CARD
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius:
+                  BorderRadius.circular(24),
+
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+
+            child: Column(
+              children: [
+
+                CircleAvatar(
+                  radius: 38,
+                  backgroundColor:
+                      emergencyColor.withOpacity(0.1),
+
+                  child: Icon(
+                    Icons.warning_amber_rounded,
+                    size: 40,
+                    color: emergencyColor,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                Text(
+                  "${widget.emergencyType} Emergency",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight:
+                        FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                Text(
+                  "Select emergency details and generate your alert message.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color:
+                        Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+
+                children: [
+
+                  const Text(
+                    "Emergency Tags",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+
+                    children:
+                        getTags().map((tag) {
+
+                      final selected =
+                          selectedTags.contains(
+                              tag);
+
+                      return FilterChip(
+                        label: Text(tag),
+
+                        selected:
+                            selected,
+
+                        selectedColor:
+                            emergencyColor
+                                .withOpacity(
+                                    0.2),
+
+                        checkmarkColor:
+                            emergencyColor,
+
+                        labelStyle:
+                            TextStyle(
+                          color: selected
+                              ? emergencyColor
+                              : Colors.black87,
+                          fontWeight:
+                              FontWeight.w600,
+                        ),
+
+                        onSelected: (_) {
+                          toggleTag(tag);
+                        },
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  const Text(
+                    "Additional Information",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Container(
+                    decoration:
+                        BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius
+                              .circular(
+                                  20),
+
+                      boxShadow: const [
+                        BoxShadow(
+                          color:
+                              Colors.black12,
+                          blurRadius: 8,
+                          offset:
+                              Offset(0, 4),
+                        ),
+                      ],
+                    ),
+
+                    child: TextField(
+                      controller:
+                          noteController,
+
+                      maxLines: 5,
+
+                      decoration:
+                          const InputDecoration(
+                        hintText:
+                            "Enter additional details here...",
+                        border:
+                            InputBorder.none,
+                        contentPadding:
+                            EdgeInsets.all(
+                                16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          SizedBox(
+            width: double.infinity,
+            height: 58,
+
+            child: ElevatedButton.icon(
+              icon: const Icon(
+                Icons.send,
+              ),
+
+              style:
+                  ElevatedButton.styleFrom(
+                backgroundColor:
+                    emergencyColor,
+
+                foregroundColor:
+                    Colors.white,
+
+                shape:
+                    RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                          18),
+                ),
+              ),
+
+              onPressed: () {
+
+                String finalMessage =
+                    generateMessage();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        SelectRecipientsScreen(
+                      emergencyType:
+                          widget
+                              .emergencyType,
+                      selectedTags:
+                          List.from(
+                              selectedTags),
+                      note:
+                          noteController.text,
+                      generatedMessage:
+                          finalMessage,
+                    ),
+                  ),
+                );
+              },
+
+              label: const Text(
+                "Generate Message",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight:
+                      FontWeight.bold,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
