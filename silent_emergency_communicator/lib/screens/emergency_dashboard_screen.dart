@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/storage_service.dart';
-
+import '../services/auto_sos_service.dart';
 import 'emergency_processing_screen.dart';
 import 'emergency_history_screen.dart';
 import 'language_screen.dart';
@@ -458,11 +458,98 @@ class _EmergencyDashboardScreenState
                     Colors.amber,
                   ),
 
-                  emergencyCard(
-                    "SOS",
-                    Icons.sos,
-                    Colors.red.shade900,
+                  GestureDetector(
+    onLongPress: () {
+  showDialog(
+    context: context,
+    builder: (_) {
+      return AlertDialog(
+        title: const Text("Emergency SOS"),
+        content: const Text(
+          "Send SOS alert to all contacts?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+
+              try {
+                await AutoSOSService.sendSOS();
+
+                if (!context.mounted) return;
+
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "SOS Alert Sent",
+                    ),
                   ),
+                );
+              } catch (e) {
+                if (!context.mounted) return;
+
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  SnackBar(
+                    content: Text(e.toString()),
+                  ),
+                );
+              }
+            },
+            child: const Text("Send"),
+          ),
+        ],
+      );
+    },
+  );
+},
+
+  child: Card(
+    color: Colors.red.shade900,
+
+    child: const Center(
+      child: Column(
+        mainAxisAlignment:
+            MainAxisAlignment.center,
+        children: [
+
+          Icon(
+            Icons.sos,
+            color: Colors.white,
+            size: 60,
+          ),
+
+          SizedBox(height: 10),
+
+          Text(
+            "SOS",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          SizedBox(height: 10),
+
+          Text(
+            "Long Press",
+            style: TextStyle(
+              color: Colors.white70,
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+),
                 ],
               ),
             ),
