@@ -221,314 +221,402 @@ if (mapsLink.isNotEmpty) {
 
   return message;
 }
-    @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Review Alert"),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
 
-            // USER INFORMATION CARD
-            
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
+@override
+Widget build(BuildContext context) {
+  Color emergencyColor = Colors.red;
 
-                    const Text(
-                      "User Information",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+  switch (widget.emergencyType) {
+    case "Police":
+      emergencyColor = Colors.blue;
+      break;
 
-                    const SizedBox(height: 10),
+    case "Fire":
+      emergencyColor = Colors.orange;
+      break;
 
-                    Text(
-                      "Name: ${profile['fullName'] ?? ''}",
-                    ),
+    case "Danger":
+      emergencyColor = Colors.amber.shade700;
+      break;
 
-                    Text(
-                      "Phone: ${profile['phoneNumber'] ?? ''}",
-                    ),
-
-                    Text(
-                      "Blood Group: ${profile['bloodGroup'] ?? ''}",
-                    ),
-                  ],
-                ),
-              ),
-            ),
-Card(
-  child: Padding(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
-      children: [
-
-        const Text(
-          "Current Location",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        const SizedBox(height: 10),
-       if (mapsLink.isNotEmpty) ...[
-  Text("Latitude: $latitude"),
-  Text("Longitude: $longitude"),
-
-  const SizedBox(height: 8),
-
-  Text(
-    mapsLink,
-    style: const TextStyle(
-      color: Colors.blue,
-    ),
-  ),
-] else ...[
-  const Text(
-    "GPS Location Unavailable",
-    style: TextStyle(
-      color: Colors.red,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-
-  const SizedBox(height: 5),
-
-  const Text(
-    "Emergency alert will still be sent.",
-  ),
-],
-      ],
-    ),
-  ),
-),
-            const SizedBox(height: 12),
-
-            // EMERGENCY TYPE
-
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.warning),
-                title: const Text("Emergency Type"),
-                subtitle: Text(widget.emergencyType),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // TAGS
-
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-
-                    const Text(
-                      "Selected Tags",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    ...widget.selectedTags.map(
-                      (tag) => ListTile(
-                        leading: const Icon(
-                          Icons.check_circle,
-                        ),
-                        title: Text(tag),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            if (widget.note.isNotEmpty)
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.notes),
-                  title: const Text(
-                    "Additional Note",
-                  ),
-                  subtitle: Text(widget.note),
-                ),
-              ),
-
-            const SizedBox(height: 12),
-
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-
-                    const Text(
-                      "Generated Message",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    Text(buildFinalMessage()),
-                  ],
-                ),
-              ),
-            ),
-Card(
-  child: Padding(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
-      children: [
-
-        const Text(
-          "Recipients",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        if (contacts.isNotEmpty) ...[
-
-          Text(
-            "Emergency Contacts (${contacts.length})",
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          ...widget.selectedContacts.map(
-  (contact) => ListTile(
-    leading:
-        const Icon(Icons.person),
-    title: Text(contact.name),
-    subtitle:
-        Text(contact.phoneNumber),
-  ),
-),
-if (widget.policeSelected)
-  const ListTile(
-    leading:
-        Icon(Icons.local_police),
-    title: Text("Police"),
-  ),
-
-if (widget.fireSelected)
-  const ListTile(
-    leading: Icon(
-      Icons.local_fire_department,
-    ),
-    title:
-        Text("Fire Department"),
-  ),
-
-if (widget.ambulanceSelected)
-  const ListTile(
-    leading: Icon(
-      Icons.medical_services,
-    ),
-    title: Text("Ambulance"),
-  ),
-
-        ] else ...
-
-          [
-            const Text(
-              "No emergency contacts added",
-            ),
-          ],
-
-        const Divider(),
-
-        const ListTile(
-          leading: Icon(
-            Icons.local_fire_department,
-            color: Colors.orange,
-          ),
-          title: Text(
-            "Fire Department",
-          ),
-          subtitle: Text(
-            "Coming Soon",
-          ),
-        ),
-
-        const ListTile(
-          leading: Icon(
-            Icons.local_police,
-            color: Colors.blue,
-          ),
-          title: Text(
-            "Police Department",
-          ),
-          subtitle: Text(
-            "Coming Soon",
-          ),
-        ),
-
-        const ListTile(
-          leading: Icon(
-            Icons.medical_services,
-            color: Colors.red,
-          ),
-          title: Text(
-            "Ambulance Service",
-          ),
-          subtitle: Text(
-            "Coming Soon",
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.send),
-                label: const Text(
-                  "Confirm Alert",
-                ),
-                onPressed: sendAlert,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    default:
+      emergencyColor = Colors.red;
   }
+
+  return Scaffold(
+    backgroundColor: const Color(0xFFF8F9FC),
+
+    appBar: AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      title: const Text(
+        "Review Alert",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+
+      child: Column(
+        children: [
+
+          /// HEADER
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius:
+                  BorderRadius.circular(24),
+
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+
+            child: Column(
+              children: [
+
+                CircleAvatar(
+                  radius: 45,
+                  backgroundColor:
+                      emergencyColor.withOpacity(0.15),
+
+                  child: Icon(
+                    Icons.warning_amber_rounded,
+                    size: 45,
+                    color: emergencyColor,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                Text(
+                  "${widget.emergencyType} Alert",
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  "Review all details before sending the emergency alert.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          /// USER PROFILE
+
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20),
+            ),
+
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+
+                children: [
+
+                  const Text(
+                    "User Information",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    "Name: ${profile['fullName'] ?? ''}",
+                  ),
+
+                  Text(
+                    "Phone: ${profile['phoneNumber'] ?? ''}",
+                  ),
+
+                  Text(
+                    "Blood Group: ${profile['bloodGroup'] ?? ''}",
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          /// LOCATION
+
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20),
+            ),
+
+            child: ListTile(
+              leading: Icon(
+                Icons.location_on,
+                color: emergencyColor,
+              ),
+
+              title: const Text(
+                "Current Location",
+              ),
+
+              subtitle: Text(
+                mapsLink.isNotEmpty
+                    ? mapsLink
+                    : "Location unavailable",
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          /// TAGS
+
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20),
+            ),
+
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+
+                children: [
+
+                  const Text(
+                    "Selected Tags",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+
+                    children: widget.selectedTags
+                        .map(
+                          (tag) => Chip(
+                            label: Text(tag),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          if (widget.note.isNotEmpty) ...[
+
+            const SizedBox(height: 15),
+
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(20),
+              ),
+
+              child: ListTile(
+                leading:
+                    const Icon(Icons.notes),
+
+                title:
+                    const Text("Additional Note"),
+
+                subtitle: Text(widget.note),
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 15),
+
+          /// RECIPIENTS
+
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20),
+            ),
+
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+
+                children: [
+
+                  const Text(
+                    "Recipients",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  ...widget.selectedContacts.map(
+                    (contact) => ListTile(
+                      leading:
+                          const Icon(Icons.person),
+                      title: Text(contact.name),
+                      subtitle:
+                          Text(contact.phoneNumber),
+                    ),
+                  ),
+
+                  Wrap(
+                    spacing: 8,
+
+                    children: [
+
+                      if (widget.policeSelected)
+                        const Chip(
+                          label: Text("Police"),
+                        ),
+
+                      if (widget.fireSelected)
+                        const Chip(
+                          label: Text("Fire"),
+                        ),
+
+                      if (widget.ambulanceSelected)
+                        const Chip(
+                          label: Text("Ambulance"),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          /// MESSAGE PREVIEW
+
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20),
+            ),
+
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+
+                children: [
+
+                  const Text(
+                    "Generated Message",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Container(
+                    constraints:
+                        const BoxConstraints(
+                      maxHeight: 250,
+                    ),
+
+                    child: SingleChildScrollView(
+                      child: SelectableText(
+                        buildFinalMessage(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 25),
+
+          SizedBox(
+            width: double.infinity,
+            height: 60,
+
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.send),
+
+              style:
+                  ElevatedButton.styleFrom(
+                backgroundColor:
+                    emergencyColor,
+
+                foregroundColor:
+                    Colors.white,
+
+                shape:
+                    RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(16),
+                ),
+              ),
+
+              onPressed: sendAlert,
+
+              label: const Text(
+                "SEND EMERGENCY ALERT",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight:
+                      FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }
