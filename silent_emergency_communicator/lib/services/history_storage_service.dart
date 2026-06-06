@@ -26,6 +26,33 @@ class HistoryStorageService {
     );
   }
 
+static Future<void> saveHistories(
+  List<EmergencyHistory> histories,
+) async {
+
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  await prefs.setStringList(
+    key,
+    histories
+        .map(
+          (history) =>
+              jsonEncode(
+            history.toJson(),
+          ),
+        )
+        .toList(),
+  );
+}
+
+static Future<void> clearHistory() async {
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  await prefs.remove(key);
+}
+
   static Future<List<EmergencyHistory>>
       getHistories() async {
     final prefs =
