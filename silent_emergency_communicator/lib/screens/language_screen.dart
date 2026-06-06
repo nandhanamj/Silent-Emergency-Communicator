@@ -48,39 +48,130 @@ class _LanguageScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+  backgroundColor: const Color(0xFFF8F9FC),
       appBar: AppBar(
-        title: const Text(
-          "Language Settings",
+  elevation: 0,
+  backgroundColor: Colors.white,
+  foregroundColor: Colors.black,
+  title: const Text(
+    "Language Settings",
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+     body: SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: Column(
+    children: [
+
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius:
+              BorderRadius.circular(24),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+
         child: Column(
           children: [
+
+            CircleAvatar(
+              radius: 40,
+              backgroundColor:
+                  Colors.red.shade50,
+
+              child: Icon(
+                Icons.language,
+                size: 40,
+                color: Colors.red.shade700,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            const Text(
+              "Choose Your Preferred Language",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight:
+                    FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              "Emergency messages and app settings will use this language.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey.shade600,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
             DropdownButtonFormField<String>(
               value: selectedLanguage,
-              decoration: const InputDecoration(
-                labelText: "Select Language",
-                border: OutlineInputBorder(),
+
+              decoration: InputDecoration(
+                labelText:
+                    "Select Language",
+
+                prefixIcon:
+                    const Icon(Icons.translate),
+
+                border:
+                    OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                    16,
+                  ),
+                ),
               ),
+
               items: const [
+
                 DropdownMenuItem(
                   value: "English",
-                  child: Text("English"),
+                  child: Text(
+                    "🇬🇧 English",
+                  ),
                 ),
+
                 DropdownMenuItem(
                   value: "Malayalam",
-                  child: Text("Malayalam"),
+                  child: Text(
+                    "🇮🇳 Malayalam",
+                  ),
                 ),
+
                 DropdownMenuItem(
                   value: "Hindi",
-                  child: Text("Hindi"),
+                  child: Text(
+                    "🇮🇳 Hindi",
+                  ),
                 ),
+
                 DropdownMenuItem(
                   value: "Tamil",
-                  child: Text("Tamil"),
+                  child: Text(
+                    "🇮🇳 Tamil",
+                  ),
                 ),
               ],
+
               onChanged: (value) {
                 setState(() {
                   selectedLanguage =
@@ -89,20 +180,52 @@ class _LanguageScreenState
               },
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
 
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: saveLanguage,
-                child: const Text(
+              height: 55,
+
+              child: ElevatedButton.icon(
+                onPressed:
+                    saveLanguage,
+
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
+
+                label: const Text(
                   "Save Language",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight:
+                        FontWeight.bold,
+                  ),
+                ),
+
+                style:
+                    ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.red.shade700,
+
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(
+                      16,
+                    ),
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    ],
+  ),
+),
     );
   }
 }
