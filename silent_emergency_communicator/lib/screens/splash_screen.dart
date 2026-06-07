@@ -26,8 +26,9 @@ class _SplashScreenState extends State<SplashScreen> {
       const Duration(seconds: 2),
     );
 
-    final profile =
-        await StorageService.getUserProfile();
+    final profile = await StorageService.getUserProfile();
+
+debugPrint("PROFILE DATA: $profile");    
 
     if (!mounted) return;
 

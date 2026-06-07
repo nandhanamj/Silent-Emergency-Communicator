@@ -200,6 +200,17 @@ Future<void> loadLocation() async {
 
   message +=
       "Blood Group: ${profile['bloodGroup'] ?? ''}\n\n";
+  if ((profile['medicalNotes'] ?? '').isNotEmpty) {
+  message +=
+      "Medical Notes: ${profile['medicalNotes']}\n";
+}
+
+if ((profile['additionalInfo'] ?? '').isNotEmpty) {
+  message +=
+      "Profile Notes: ${profile['additionalInfo']}\n";
+}
+
+message += "\n";    
 
   for (var tag in widget.selectedTags) {
     message += "$tag\n";
@@ -363,6 +374,19 @@ Widget build(BuildContext context) {
                   Text(
                     "Blood Group: ${profile['bloodGroup'] ?? ''}",
                   ),
+                  if ((profile['medicalNotes'] ?? '')
+    .toString()
+    .isNotEmpty)
+  Text(
+    "Medical Notes: ${profile['medicalNotes']}",
+  ),
+
+if ((profile['additionalInfo'] ?? '')
+    .toString()
+    .isNotEmpty)
+  Text(
+    "Profile Notes: ${profile['additionalInfo']}",
+  ),
                 ],
               ),
             ),

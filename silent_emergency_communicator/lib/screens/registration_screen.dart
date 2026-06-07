@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/storage_service.dart';
+import 'emergency_dashboard_screen.dart';
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -78,6 +79,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         content: Text('Profile saved successfully'),
       ),
     );
+    Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (_) => const EmergencyDashboardScreen(),
+  ),
+);
   }
 }
 

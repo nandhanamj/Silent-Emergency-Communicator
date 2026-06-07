@@ -28,27 +28,11 @@ class _SelectRecipientsScreenState
   List<EmergencyContact> contacts = [];
   List<EmergencyContact> selectedContacts = [];
 
-  bool policeSelected = false;
-  bool fireSelected = false;
-  bool ambulanceSelected = false;
-
   @override
   void initState() {
     super.initState();
 
     loadContacts();
-
-    if (widget.emergencyType == "Medical") {
-      ambulanceSelected = true;
-    }
-
-    if (widget.emergencyType == "Police") {
-      policeSelected = true;
-    }
-
-    if (widget.emergencyType == "Fire") {
-      fireSelected = true;
-    }
   }
 
   Future<void> loadContacts() async {
@@ -61,10 +45,7 @@ class _SelectRecipientsScreenState
   }
 
   void continueToReview() {
-    if (selectedContacts.isEmpty &&
-        !policeSelected &&
-        !fireSelected &&
-        !ambulanceSelected) {
+    if (selectedContacts.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -87,30 +68,11 @@ class _SelectRecipientsScreenState
               widget.generatedMessage,
           selectedContacts:
               selectedContacts,
-          policeSelected: policeSelected,
-          fireSelected: fireSelected,
-          ambulanceSelected:
-              ambulanceSelected,
+          policeSelected: false,
+fireSelected: false,
+ambulanceSelected: false,
         ),
       ),
-    );
-  }
-
-  Widget buildAuthorityTile({
-    required String title,
-    required IconData icon,
-    required bool value,
-    required Function(bool?) onChanged,
-  }) {
-    return CheckboxListTile(
-      secondary: Icon(
-        icon,
-        color: Colors.red.shade700,
-      ),
-      title: Text(title),
-      value: value,
-      activeColor: Colors.red.shade700,
-      onChanged: onChanged,
     );
   }
 
@@ -188,7 +150,7 @@ class _SelectRecipientsScreenState
                     height: 8),
 
                 Text(
-                  "Select contacts and emergency services that should receive this alert.",
+                  "Select emergency contacts who should receive this alert.",
                   textAlign:
                       TextAlign.center,
                   style: TextStyle(
@@ -266,43 +228,31 @@ class _SelectRecipientsScreenState
                     )
                   else
                     ...contacts.map(
-                      (contact) =>
-                          CheckboxListTile(
-                        value:
-                            selectedContacts
-                                .contains(
-                                    contact),
+                      (contact) => Material(
+    color: Colors.transparent,
+    child: CheckboxListTile(
+      value: selectedContacts.contains(contact),
 
-                        activeColor:
-                            Colors
-                                .red
-                                .shade700,
+      activeColor: Colors.red.shade700,
 
-                        title: Text(
-                            contact.name),
+      title: Text(contact.name),
 
-                        subtitle: Text(
-                          contact
-                              .relationship,
-                        ),
+      subtitle: Text(
+        contact.relationship,
+      ),
 
-                        onChanged:
-                            (value) {
-                          setState(() {
-                            if (value ==
-                                true) {
-                              selectedContacts
-                                  .add(
-                                      contact);
-                            } else {
-                              selectedContacts
-                                  .remove(
-                                      contact);
-                            }
-                          });
-                        },
-                      ),
-                    ),
+      onChanged: (value) {
+        setState(() {
+          if (value == true) {
+            selectedContacts.add(contact);
+          } else {
+            selectedContacts.remove(contact);
+          }
+        });
+      },
+    ),
+  ),
+),
                 ],
               ),
             ),
@@ -310,97 +260,79 @@ class _SelectRecipientsScreenState
 
           const SizedBox(height: 20),
 
-          /// AUTHORITIES CARD
+         /// AUTHORITIES CARD
 
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius:
-                  BorderRadius.circular(
-                      24),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 8,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
+Container(
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(24),
+    boxShadow: const [
+      BoxShadow(
+        color: Colors.black12,
+        blurRadius: 8,
+        offset: Offset(0, 4),
+      ),
+    ],
+  ),
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
 
-            child: Padding(
-              padding:
-                  const EdgeInsets.all(
-                      16),
-
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment
-                        .start,
-
-                children: [
-
-                  const Text(
-                    "Authorities",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(
-                      height: 12),
-
-                  buildAuthorityTile(
-                    title: "Police",
-                    icon:
-                        Icons.local_police,
-                    value:
-                        policeSelected,
-                    onChanged:
-                        (value) {
-                      setState(() {
-                        policeSelected =
-                            value!;
-                      });
-                    },
-                  ),
-
-                  buildAuthorityTile(
-                    title:
-                        "Fire Department",
-                    icon:
-                        Icons.local_fire_department,
-                    value:
-                        fireSelected,
-                    onChanged:
-                        (value) {
-                      setState(() {
-                        fireSelected =
-                            value!;
-                      });
-                    },
-                  ),
-
-                  buildAuthorityTile(
-                    title:
-                        "Ambulance",
-                    icon:
-                        Icons.medical_services,
-                    value:
-                        ambulanceSelected,
-                    onChanged:
-                        (value) {
-                      setState(() {
-                        ambulanceSelected =
-                            value!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
+        const Text(
+          "Authorities",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+
+        const SizedBox(height: 12),
+
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Text(
+            "Direct authority communication is planned for a future update.",
+          ),
+        ),
+
+        const SizedBox(height: 15),
+
+        const Material(
+  color: Colors.transparent,
+  child: ListTile(
+    leading: Icon(Icons.local_police),
+    title: Text("Police Integration"),
+    subtitle: Text("Coming Soon"),
+  ),
+),
+
+        const Material(
+  color: Colors.transparent,
+  child: ListTile(
+    leading: Icon(Icons.local_fire_department),
+    title: Text("Fire Department Integration"),
+    subtitle: Text("Coming Soon"),
+  ),
+),
+
+        const Material(
+  color: Colors.transparent,
+  child: ListTile(
+    leading: Icon(Icons.medical_services),
+    title: Text("Ambulance Integration"),
+    subtitle: Text("Coming Soon"),
+  ),
+),
+      ],
+    ),
+  ),
+),
 
           const SizedBox(height: 25),
 

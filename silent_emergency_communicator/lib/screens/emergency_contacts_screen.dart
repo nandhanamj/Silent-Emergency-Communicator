@@ -77,154 +77,203 @@ class _EmergencyContactsScreenState
   foregroundColor: Colors.black,
 ),
 
-      body: contacts.isEmpty
-    ? Center(
-        child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center,
-          children: [
+body: Column(
+  children: [
 
-            Icon(
-              Icons.contacts,
-              size: 80,
-              color: Colors.grey.shade400,
-            ),
+    // Emergency Authorities Card
 
-            const SizedBox(height: 15),
+    Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
 
-            const Text(
-              "No Emergency Contacts",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 5),
-
-            const Text(
-              "Add trusted contacts for emergencies",
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      )
-    : ListView.builder(
-        padding:
-            const EdgeInsets.all(16),
-        itemCount: contacts.length,
-        itemBuilder:
-            (context, index) {
-
-          final contact =
-              contacts[index];
-
-          return Container(
-            margin:
-                const EdgeInsets.only(
-              bottom: 15,
-            ),
-            padding:
-                const EdgeInsets.all(
-              16,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius:
-                  BorderRadius.circular(
-                20,
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 8,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-
-            child: Row(
-              children: [
-
-                CircleAvatar(
-                  radius: 28,
-                  backgroundColor:
-                      Colors.red.shade50,
-                  child: Icon(
-                    Icons.person,
-                    color:
-                        Colors.red.shade700,
-                  ),
-                ),
-
-                const SizedBox(
-                  width: 15,
-                ),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
-                    children: [
-
-                      Text(
-                        contact.name,
-                        style:
-                            const TextStyle(
-                          fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 4,
-                      ),
-
-                      Text(
-                        contact.relationship,
-                        style:
-                            const TextStyle(
-                          color:
-                              Colors.grey,
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 4,
-                      ),
-
-                      Text(
-                        contact.phoneNumber,
-                        style:
-                            const TextStyle(
-                          fontWeight:
-                              FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                IconButton(
-                  icon: const Icon(
-                    Icons.delete_outline,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    deleteContact(
-                      index,
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Row(
+            children: const [
+              Icon(
+                Icons.local_police,
+                color: Colors.red,
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Emergency Authorities",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 12),
+
+          const SizedBox(height: 10),
+
+Row(
+  children: const [
+    Icon(Icons.local_police),
+    SizedBox(width: 12),
+    Text(
+      "Police - 100",
+      style: TextStyle(fontSize: 16),
+    ),
+  ],
+),
+
+SizedBox(height: 12),
+
+Row(
+  children: const [
+    Icon(Icons.local_fire_department),
+    SizedBox(width: 12),
+    Text(
+      "Fire Force - 101",
+      style: TextStyle(fontSize: 16),
+    ),
+  ],
+),
+
+SizedBox(height: 12),
+
+Row(
+  children: const [
+    Icon(Icons.medical_services),
+    SizedBox(width: 12),
+    Text(
+      "Ambulance - 108",
+      style: TextStyle(fontSize: 16),
+    ),
+  ],
+),
+
+          Center(
+            child: Chip(
+              label: Text("Coming Soon"),
+            ),
+          ),
+        ],
+      ),
+    ),
+
+    // Existing Contacts Section
+
+    Expanded(
+      child: contacts.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.center,
+                children: [
+                  // your existing empty state
+                ],
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              itemCount: contacts.length,
+             itemBuilder: (context, index) {
+  final contact = contacts[index];
+
+  return Container(
+    margin: const EdgeInsets.only(
+      bottom: 15,
+    ),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 8,
+          offset: Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: Colors.red.shade50,
+          child: Icon(
+            Icons.person,
+            color: Colors.red.shade700,
+          ),
+        ),
+
+        const SizedBox(width: 15),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
+            children: [
+
+              Text(
+                contact.name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight:
+                      FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                contact.relationship,
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                contact.phoneNumber,
+                style: const TextStyle(
+                  fontWeight:
+                      FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        IconButton(
+          icon: const Icon(
+            Icons.delete_outline,
+            color: Colors.red,
+          ),
+          onPressed: () {
+            deleteContact(index);
+          },
+        ),
+      ],
+    ),
+  );
+},
+            ),
+    ),
+  ],
+),
 floatingActionButton:
     FloatingActionButton.extended(
   onPressed: addContact,

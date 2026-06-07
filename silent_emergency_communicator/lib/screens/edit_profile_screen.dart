@@ -23,6 +23,8 @@ class _EditProfileScreenState
   late TextEditingController nameController;
   late TextEditingController phoneController;
   late TextEditingController bloodController;
+  late TextEditingController medicalController;
+late TextEditingController additionalController;
 
   @override
   void initState() {
@@ -42,6 +44,15 @@ class _EditProfileScreenState
         TextEditingController(
       text: widget.profile['bloodGroup'] ?? '',
     );
+    medicalController =
+    TextEditingController(
+  text: widget.profile['medicalNotes'] ?? '',
+);
+
+additionalController =
+    TextEditingController(
+  text: widget.profile['additionalInfo'] ?? '',
+);
   }
 
   Future<void> saveProfile() async {
@@ -53,9 +64,10 @@ class _EditProfileScreenState
       bloodGroup:
           bloodController.text.trim(),
       medicalNotes:
-          widget.profile['medicalNotes'] ?? '',
-      additionalInfo:
-          widget.profile['additionalInfo'] ?? '',
+    medicalController.text.trim(),
+
+additionalInfo:
+    additionalController.text.trim(),
     );
 
     if (!mounted) return;
@@ -258,6 +270,43 @@ class _EditProfileScreenState
                           "Blood Group",
                       icon: Icons.bloodtype,
                     ),
+                    const SizedBox(height: 18),
+
+TextFormField(
+  controller: medicalController,
+  maxLines: 3,
+  decoration: InputDecoration(
+    prefixIcon: Icon(
+      Icons.medical_information,
+      color: Colors.red.shade700,
+    ),
+    labelText: "Medical Notes",
+    filled: true,
+    fillColor: Colors.grey.shade50,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+  ),
+),
+
+const SizedBox(height: 18),
+
+TextFormField(
+  controller: additionalController,
+  maxLines: 3,
+  decoration: InputDecoration(
+    prefixIcon: Icon(
+      Icons.info_outline,
+      color: Colors.red.shade700,
+    ),
+    labelText: "Additional Information",
+    filled: true,
+    fillColor: Colors.grey.shade50,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+  ),
+),
 
                     const SizedBox(
                         height: 30),
@@ -315,4 +364,13 @@ class _EditProfileScreenState
       ),
     );
   }
+  @override
+void dispose() {
+  nameController.dispose();
+  phoneController.dispose();
+  bloodController.dispose();
+  medicalController.dispose();
+  additionalController.dispose();
+  super.dispose();
+}
 }

@@ -181,7 +181,29 @@ class _ProfileScreenState
         Colors.red,
       ),
 
-      const SizedBox(height: 30),
+      const SizedBox(height: 15),
+
+profileInfoCard(
+  Icons.medical_information,
+  "Medical Notes",
+  profile['medicalNotes']?.isNotEmpty == true
+      ? profile['medicalNotes']
+      : "Not Added",
+  Colors.orange,
+),
+
+const SizedBox(height: 15),
+
+profileInfoCard(
+  Icons.info_outline,
+  "Additional Info",
+  profile['additionalInfo']?.isNotEmpty == true
+      ? profile['additionalInfo']
+      : "Not Added",
+  Colors.blue,
+),
+
+const SizedBox(height: 30),
 
       SizedBox(
         width: double.infinity,

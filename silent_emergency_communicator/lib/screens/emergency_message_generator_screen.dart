@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'review_alert_screen.dart';
 import 'select_recipients_screen.dart';
+import '../services/storage_service.dart';
 
 class EmergencyMessageGeneratorScreen extends StatefulWidget {
   final String emergencyType;
@@ -17,6 +18,7 @@ class EmergencyMessageGeneratorScreen extends StatefulWidget {
 
 class _EmergencyMessageGeneratorScreenState
     extends State<EmergencyMessageGeneratorScreen> {
+      Map<String, dynamic> profile = {};
 
   final TextEditingController noteController =
       TextEditingController();
@@ -75,6 +77,19 @@ class _EmergencyMessageGeneratorScreenState
       return [];
   }
 }
+Future loadProfile() async {
+  profile =
+      await StorageService.getUserProfile();
+
+  if (!mounted) return;
+
+  setState(() {});
+}
+@override
+void initState() {
+  super.initState();
+  loadProfile();
+}
   void toggleTag(String tag) {
     setState(() {
       if (selectedTags.contains(tag)) {
@@ -85,23 +100,52 @@ class _EmergencyMessageGeneratorScreenState
     });
   }
 
-  String generateMessage() {
-    String message =
-        "${widget.emergencyType.toUpperCase()} EMERGENCY\n\n";
+ String generateMessage() {
+  String message =
+      "${widget.emergencyType.toUpperCase()} EMERGENCY\n\n";
 
-    for (var tag in selectedTags) {
-      message += "$tag\n";
-    }
+  message +=
+      "Name: ${profile['fullName'] ?? 'Unknown'}\n";
 
-    if (noteController.text.isNotEmpty) {
-      message +=
-          "\nAdditional Information:\n${noteController.text}";
-    }
+  message +=
+      "Phone: ${profile['phoneNumber'] ?? 'Not Available'}\n";
 
-    message += "\n\nPlease respond immediately.";
+ if ((profile['bloodGroup'] ?? '')
+    .toString()
+    .isNotEmpty) {
+  message +=
+      "Blood Group: ${profile['bloodGroup']}\n";
+}
 
-    return message;
+  if ((profile['medicalNotes'] ?? '')
+    .toString()
+    .isNotEmpty) {
+  message +=
+      "Medical Notes: ${profile['medicalNotes']}\n";
+}
+
+if ((profile['additionalInfo'] ?? '')
+    .toString()
+    .isNotEmpty) {
+  message +=
+      "Profile Notes: ${profile['additionalInfo']}\n";
+}
+
+  message += "\n";
+
+  for (var tag in selectedTags) {
+    message += "$tag\n";
   }
+
+  if (noteController.text.isNotEmpty) {
+    message +=
+        "\nAdditional Information:\n${noteController.text}";
+  }
+
+  message += "\n\nPlease respond immediately.";
+
+  return message;
+}
 
  @override
 Widget build(BuildContext context) {
